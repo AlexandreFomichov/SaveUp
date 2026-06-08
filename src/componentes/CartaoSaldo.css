@@ -1,0 +1,49 @@
+.balance-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.balance-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.balance-main .label {
+  color: var(--color-text-secondary);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.balance-main .value {
+  font-size: 1.9rem;
+  margin: 0.2rem 0;
+  color: #2d9057;
+  font-weight: 800;
+}
+
+.mini-stats {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.label-sm {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.value-sm {
+  margin: 0;
+  font-weight: 700;
+  color: #2d9057;
+}
+
+.value-sm.spent {
+  color: #c74c3e;
+}

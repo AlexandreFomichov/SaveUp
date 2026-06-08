@@ -1,0 +1,20 @@
+.progress-wrap {
+  width: 100%;
+}
+
+.progress-bg {
+  height: 14px;
+  background: rgba(45, 144, 87, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #2d9057;
+  transition: width 0.4s ease;
+}
+
+.progress-fill.over {
+  background: #c74c3e;
+}
