@@ -1,0 +1,212 @@
+/* Budget Panel Component Styles */
+.budget-container {
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  box-shadow: 0 20px 50px rgba(26, 26, 26, 0.08);
+  border: 1px solid #e8dfd3;
+  border-left: 4px solid #2d9057;
+}
+
+.budget-loading {
+  text-align: center;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+}
+
+.budget-header {
+  margin-bottom: 1.5rem;
+}
+
+.budget-header h2 {
+  color: var(--color-text-primary);
+  font-size: 1.45rem;
+  margin-bottom: 0.5rem;
+}
+
+.budget-setup,
+.budget-progress {
+  background-color: #f5f0e8;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e8dfd3;
+}
+
+.budget-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.budget-label {
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.budget-value {
+  color: #2d9057;
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.budget-edit {
+  display: grid;
+  gap: 1rem;
+}
+
+.budget-edit label {
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-size: 1rem;
+}
+
+.budget-edit input {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 1rem;
+  font-size: 1rem;
+  background-color: #ffffff;
+  color: var(--color-text-primary);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.budget-edit input:focus {
+  outline: none;
+  border-color: #2d9057;
+  box-shadow: 0 0 0 4px rgba(45, 144, 87, 0.14);
+}
+
+.budget-edit-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.budget-setup .btn {
+  width: 100%;
+  max-width: 240px;
+}
+
+.progress-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.progress-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.15rem 1.25rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid rgba(16, 42, 67, 0.08);
+}
+
+.stat-label {
+  color: var(--color-text-secondary);
+  font-weight: 700;
+}
+
+.stat-value {
+  color: var(--color-green-dark);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.stat-value.over {
+  color: var(--color-red-primary);
+}
+
+.stat-value.remaining {
+  color: var(--color-green-primary);
+}
+
+.progress-bar-container {
+  background-color: rgba(56, 178, 172, 0.08);
+  border-radius: 1rem;
+  overflow: hidden;
+  height: 36px;
+  margin-bottom: 1.25rem;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent-teal), var(--color-green-primary));
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 1rem;
+}
+
+.progress-bar.over {
+  background: linear-gradient(90deg, #ff7f7f, #e46060);
+}
+
+.progress-text {
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.budget-status {
+  color: var(--color-text-primary);
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+
+.card-label {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.card-value {
+  color: var(--color-green-dark);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .expenses-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .progress-info,
+  .budget-edit-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .budget-container {
+    padding: 1.25rem;
+  }
+
+  .budget-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .budget-value {
+    font-size: 2.5rem;
+  }
+
+  .expenses-grid {
+    grid-template-columns: 1fr;
+  }
+}
