@@ -9,8 +9,15 @@ import mysql from 'mysql2/promise';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distPath = path.join(__dirname, 'dist');
 
 console.log('🚀 Iniciando SaveUp Server...');
 console.log('📡 Conectando à base de dados...');
@@ -29,9 +36,11 @@ app.use(cors({
 }));
 app.use(express.json({ charset: 'utf-8' }));
 
-// Garantir UTF-8 em todas as respostas
+// Garantir UTF-8 apenas para as rotas de API
 app.use((req, res, next) => {
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  if (req.path.startsWith('/api')) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  }
   next();
 });
 
@@ -785,6 +794,15 @@ const startServer = async () => {
       res.status(500).json({ error: true, message: 'Erro ao eliminar receita' });
     }
   });
+
+  // Servir o frontend Vite construído se existir
+  if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath));
+
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  }
 
   // Iniciar servidor
   const server = app.listen(port, () => {

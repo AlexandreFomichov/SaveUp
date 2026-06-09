@@ -10,6 +10,7 @@
     "server:clean": "node -e \"require('child_process').spawnSync('npx', ['kill-port', '3000'], {stdio: 'ignore', shell: true});\" && npm run server",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\"",
     "build": "vite build",
+    "start": "npm run build && node server.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
