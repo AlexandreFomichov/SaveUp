@@ -1,4 +1,72 @@
-.dropdown { position: relative; }
-.drop-btn { background: var(--color-white); border: 1px solid var(--color-border); padding: var(--spacing-sm); border-radius: var(--border-radius-md); cursor: pointer; color: var(--color-text-primary); font-size: var(--font-size-sm); }
-.drop-list { position: absolute; right: 0; top: calc(100% + 8px); background: var(--color-white); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md); padding: var(--spacing-sm); display: flex; flex-direction: column; gap: 0.35rem; min-width: 180px; z-index: 20; }
-.drop-list a { padding: var(--spacing-sm); color: var(--color-text-primary); text-decoration: none; border-radius: var(--border-radius-md); font-size: var(--font-size-sm); }
+.dropdown { 
+  position: relative; 
+}
+
+.drop-btn { 
+  background: var(--color-white); 
+  border: 1px solid var(--color-border); 
+  padding: var(--spacing-sm); 
+  border-radius: var(--border-radius-md); 
+  cursor: pointer; 
+  color: var(--color-text-primary); 
+  font-size: var(--font-size-sm); 
+  transition: all 0.2s ease;
+}
+
+.drop-btn:hover {
+  border-color: var(--color-green-primary);
+  background: var(--color-surface-soft);
+}
+
+.drop-list { 
+  position: absolute; 
+  right: 0; 
+  top: calc(100% + 8px); 
+  background: var(--color-white); 
+  border-radius: var(--border-radius-lg); 
+  box-shadow: var(--shadow-md); 
+  padding: var(--spacing-sm); 
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.35rem; 
+  min-width: 180px; 
+  z-index: 20; 
+}
+
+.drop-list a { 
+  padding: var(--spacing-sm); 
+  color: var(--color-text-primary); 
+  text-decoration: none; 
+  border-radius: var(--border-radius-md); 
+  font-size: var(--font-size-sm); 
+  transition: background-color 0.2s ease;
+}
+
+.drop-list a:hover {
+  background: var(--color-surface-soft);
+}
+
+/* Media Queries Responsivas */
+@media (max-width: 768px) {
+  .drop-btn {
+    padding: calc(var(--spacing-sm) - 0.125rem);
+    font-size: calc(var(--font-size-sm) - 0.05rem);
+  }
+
+  .drop-list {
+    min-width: 160px;
+    padding: calc(var(--spacing-sm) - 0.125rem);
+  }
+
+  .drop-list a {
+    padding: calc(var(--spacing-sm) - 0.125rem);
+    font-size: calc(var(--font-size-sm) - 0.05rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .drop-list {
+    min-width: 140px;
+    right: -20px;
+  }
+}

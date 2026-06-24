@@ -181,9 +181,114 @@
   font-weight: 800;
 }
 
+@media (max-width: 1024px) {
+  .budget-container {
+    padding: 1.5rem;
+  }
+
+  .budget-header h2 {
+    font-size: 1.75rem;
+  }
+
+  .budget-value {
+    font-size: 2.75rem;
+  }
+
+  .budget-setup,
+  .budget-progress {
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .progress-bar-container {
+    height: 32px;
+  }
+
+  .stat-value {
+    font-size: 1.2rem;
+  }
+}
+
 @media (max-width: 900px) {
   .expenses-grid {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .budget-container {
+    padding: 1.25rem;
+  }
+
+  .budget-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .budget-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .budget-label {
+    font-size: 0.9rem;
+  }
+
+  .budget-value {
+    font-size: 2rem;
+  }
+
+  .budget-setup,
+  .budget-progress {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius-md);
+  }
+
+  .budget-edit label {
+    font-size: 0.9rem;
+  }
+
+  .budget-edit input {
+    padding: 0.85rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .budget-edit-buttons {
+    gap: 0.75rem;
+  }
+
+  .budget-setup .btn {
+    max-width: none;
+  }
+
+  .progress-info {
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .progress-stat {
+    padding: 1rem 1.1rem;
+    border-radius: 0.8rem;
+  }
+
+  .stat-value {
+    font-size: 1.1rem;
+  }
+
+  .progress-bar-container {
+    height: 28px;
+    margin-bottom: 1rem;
+  }
+
+  .progress-text {
+    font-size: 0.9rem;
+  }
+
+  .card-value {
+    font-size: 1.3rem;
+  }
+
+  .expenses-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -192,22 +297,113 @@
   .budget-edit-buttons {
     grid-template-columns: 1fr;
   }
+
+  .budget-edit-buttons .btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
   .budget-container {
-    padding: 1.25rem;
+    padding: 1rem;
+    border-radius: var(--border-radius-md);
   }
 
   .budget-header h2 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
+  }
+
+  .budget-label {
+    font-size: 0.85rem;
   }
 
   .budget-value {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
+  }
+
+  .budget-setup,
+  .budget-progress {
+    padding: 0.85rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .budget-display {
+    gap: 0.75rem;
+  }
+
+  .budget-edit {
+    gap: 0.75rem;
+  }
+
+  .budget-edit label {
+    font-size: 0.8rem;
+  }
+
+  .budget-edit input {
+    padding: 0.7rem 0.85rem;
+    font-size: 0.85rem;
+  }
+
+  .progress-stat {
+    padding: 0.85rem 0.95rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .stat-value {
+    font-size: 0.95rem;
+  }
+
+  .progress-bar-container {
+    height: 24px;
+    margin-bottom: 0.75rem;
+  }
+
+  .progress-text {
+    font-size: 0.8rem;
+    padding-right: 0.5rem;
+  }
+
+  .card-label {
+    font-size: 0.8rem;
+  }
+
+  .card-value {
+    font-size: 1rem;
+  }
+
+  .budget-status {
+    font-size: 0.9rem;
   }
 
   .expenses-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .budget-container {
+    padding: 0.85rem;
+  }
+
+  .budget-header h2 {
+    font-size: 1rem;
+  }
+
+  .budget-value {
+    font-size: 1.25rem;
+  }
+
+  .stat-value {
+    font-size: 0.85rem;
+  }
+
+  .card-value {
+    font-size: 0.9rem;
   }
 }

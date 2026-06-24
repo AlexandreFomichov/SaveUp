@@ -18,3 +18,16 @@
 .progress-fill.over {
   background: var(--color-error);
 }
+
+/* Media Queries Responsivas */
+@media (max-width: 768px) {
+  .progress-bg {
+    height: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-bg {
+    height: 10px;
+  }
+}
