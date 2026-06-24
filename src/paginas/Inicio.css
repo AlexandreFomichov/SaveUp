@@ -189,7 +189,7 @@
 }
 
 .budget-info {
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 
 .transactions-grid {
@@ -260,16 +260,29 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* Reordenar items do orçamento */
-.budget-item.budget-combined-monthly {
+/* Posicionamento dos items individuais */
+.budget-item.budget-monthly-only {
+  grid-column: 1;
   grid-row: 1;
 }
 
-.budget-item.budget-combined-spent {
+.budget-item.budget-spent-only {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.budget-item.budget-remaining-only {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.budget-item.budget-income-only {
+  grid-column: 2;
   grid-row: 2;
 }
 
 .budget-item.budget-category {
+  grid-column: 1 / -1;
   grid-row: 3;
 }
 
@@ -383,22 +396,6 @@
 
 .budget-item .value.negative {
   color: var(--color-error);
-}
-
-.budget-item.budget-combined-monthly,
-.budget-item.budget-combined-spent {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  align-items: stretch;
-  padding: 1.2rem;
-}
-
-.budget-combined-left,
-.budget-combined-right {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
 }
 
 .budget-alert {

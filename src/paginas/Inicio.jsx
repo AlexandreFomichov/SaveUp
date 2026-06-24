@@ -46,28 +46,26 @@ function BudgetOverview({ monthlyBudget, totalSpent, totalIncomes, available, pe
 
       <div className="budget-card card">
         <div className="budget-info">
-          <div className="budget-item budget-combined-monthly">
-            <div className="budget-combined-left">
-              <span className="label">Orçamento Mensal</span>
-              <strong className="value">{formatCurrency(monthlyBudget)}</strong>
-            </div>
-            <div className="budget-combined-right">
-              <span className="label">Restante</span>
-              <strong className={`value ${available >= 0 ? 'positive' : 'negative'}`}>
-                {formatCurrency(available)}
-              </strong>
-            </div>
+          <div className="budget-item budget-monthly-only">
+            <span className="label">Orçamento Mensal</span>
+            <strong className="value">{formatCurrency(monthlyBudget)}</strong>
           </div>
 
-          <div className="budget-item budget-combined-spent">
-            <div className="budget-combined-left">
-              <span className="label">Despesas Realizadas</span>
-              <strong className="value negative">{formatCurrency(totalSpent)}</strong>
-            </div>
-            <div className="budget-combined-right">
-              <span className="label">Rendimentos Extra</span>
-              <strong className="value positive">{formatCurrency(totalIncomes)}</strong>
-            </div>
+          <div className="budget-item budget-spent-only">
+            <span className="label">Despesas Realizadas</span>
+            <strong className="value negative">{formatCurrency(totalSpent)}</strong>
+          </div>
+
+          <div className="budget-item budget-remaining-only">
+            <span className="label">Restante</span>
+            <strong className={`value ${available >= 0 ? 'positive' : 'negative'}`}>
+              {formatCurrency(available)}
+            </strong>
+          </div>
+
+          <div className="budget-item budget-income-only">
+            <span className="label">Rendimentos Extra</span>
+            <strong className="value positive">{formatCurrency(totalIncomes)}</strong>
           </div>
 
           {current && (
