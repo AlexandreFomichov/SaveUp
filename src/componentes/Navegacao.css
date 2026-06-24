@@ -30,6 +30,8 @@
 
 .nav-container .nav-user {
   flex-shrink: 0;
+  margin-left: auto;
+  gap: 0;
 }
 
 .nav-logo {
@@ -124,7 +126,7 @@
 .nav-user {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0;
 }
 
 .user-profile {
