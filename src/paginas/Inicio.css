@@ -891,6 +891,17 @@
     gap: 0.75rem;
   }
 
+  .budget-category-left {
+    width: 100%;
+  }
+
+  .category-toggle {
+    align-self: center;
+    width: 100%;
+    max-width: 42px;
+    margin-top: 0.5rem;
+  }
+
   .budget-trend-card {
     padding: 1.25rem;
   }

@@ -29,8 +29,9 @@
 }
 
 .nav-container .nav-user {
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
-  margin-left: auto;
   gap: 0;
 }
 
@@ -422,7 +423,7 @@
 @media (max-width: 768px) {
   .nav-container {
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 0.5rem;
     padding: 0.75rem 1rem;
   }
