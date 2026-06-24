@@ -261,15 +261,15 @@
 }
 
 /* Reordenar items do orçamento */
-.budget-item.budget-category {
+.budget-item.budget-combined-monthly {
   grid-row: 1;
 }
 
-.budget-item.budget-combined-monthly {
+.budget-item.budget-combined-spent {
   grid-row: 2;
 }
 
-.budget-item.budget-combined-spent {
+.budget-item.budget-category {
   grid-row: 3;
 }
 
