@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { expensesService } from '../servicos/api';
-import { formatCurrency, formatDate } from '../utilitarios/formatadores';
+import { formatCurrencyRounded, formatDate } from '../utilitarios/formatadores';
 import './ListaDespesas.css';
 
 /**
  * Componente de Lista de Despesas
- * Exibe apenas as despesas recentes
+ * Exibe as despesas recentes
  */
 function ExpenseList({ userId, token, refreshTrigger }) {
   const [expenses, setExpenses] = useState([]);
@@ -18,7 +18,7 @@ function ExpenseList({ userId, token, refreshTrigger }) {
     setError(null);
     try {
       const data = await expensesService.getAll(userId, token);
-      setExpenses(data || []);
+      setExpenses(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
       setExpenses([]);
@@ -32,7 +32,6 @@ function ExpenseList({ userId, token, refreshTrigger }) {
       loadExpenses();
     }
   }, [userId, token, refreshTrigger, loadExpenses]);
-
 
   // Função para eliminar despesa
   const deleteExpense = async (expenseId) => {
@@ -78,15 +77,18 @@ function ExpenseList({ userId, token, refreshTrigger }) {
                     <span className="trans-category">
                       {expense.categoria_nome || expense.categoria || 'Outras'}
                     </span>
-                    <span className="trans-desc">
-                      {expense.descricao || 'Sem descrição'}
-                    </span>
+                    <span className="trans-desc">{expense.descricao || 'Sem descrição'}</span>
                   </div>
                 </div>
+
                 <div className="trans-right">
                   <div className="trans-value-date">
-                    <span className="trans-value">-{formatCurrency(parseFloat(expense.valor) || 0)}</span>
+                    <span className="trans-value">-{formatCurrencyRounded(parseFloat(expense.valor) || 0)}</span>
                     <span className="trans-date">{formatDate(expense.data)}</span>
+                  </div>
+
+                  <div className="action-buttons">
+                    <button type="button" className="btn-icon btn-delete" onClick={() => deleteExpense(expense.id || expense._id)}>Eliminar</button>
                   </div>
                 </div>
               </li>

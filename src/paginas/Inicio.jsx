@@ -34,11 +34,6 @@ function BudgetOverview({ monthlyBudget, totalSpent, totalIncomes, available, pe
 
   return (
     <section className="home-section home-budget">
-      <div className="section-title">
-        <h2>Orçamento Mensal</h2>
-        <p>Acompanhe o uso do seu orçamento mensal.</p>
-      </div>
-
       {isOverBudget && (
         <div className="budget-alert budget-alert-danger">
           <div className="budget-alert-icon"></div>
@@ -66,7 +61,7 @@ function BudgetOverview({ monthlyBudget, totalSpent, totalIncomes, available, pe
             <strong className="value">{formatCurrency(monthlyBudget)}</strong>
           </div>
           <div className="budget-item budget-income">
-            <span className="label">Receitas Adicionais</span>
+            <span className="label">Rendimentos Extra</span>
             <strong className="value positive">{formatCurrency(totalIncomes)}</strong>
           </div>
           {current && (
@@ -143,11 +138,6 @@ function BudgetOverview({ monthlyBudget, totalSpent, totalIncomes, available, pe
 function QuickActions({ userId, token, onExpenseCreated, onIncomeCreated, onNotification }) {
   return (
     <section className="home-section home-actions">
-      <div className="section-title">
-        <h2>Registos Rápidos</h2>
-        <p>Adicione despesas e rendimentos extras de forma rápida.</p>
-      </div>
-
       <div className="home-actions-grid">
         <div className="card action-card">
           <ExpenseForm
@@ -174,11 +164,6 @@ function QuickActions({ userId, token, onExpenseCreated, onIncomeCreated, onNoti
 function TransactionsSection({ recentExpenses, recentIncomes }) {
   return (
     <section className="home-section home-transactions">
-      <div className="section-title">
-        <h2>Últimas Transações</h2>
-        <p>Visualize suas despesas e rendimentos mais recentes.</p>
-      </div>
-
       <div className="transactions-grid">
         <div className="card transactions-card">
           <h3>Despesas Recentes</h3>
@@ -249,11 +234,6 @@ function InsightsSection({ expensesLength, avgExpenseValue, monthlyBudget, perce
 
   return (
     <section className="home-section home-insights">
-      <div className="section-title">
-        <h2>Insights Rápidos</h2>
-        <p>Análise do seu padrão de gastos.</p>
-      </div>
-
       <div className="insights-grid">
         <div className="insight-card">
           <h4>Gasto Médio</h4>
@@ -335,10 +315,19 @@ export default function Home({ userId, token, refreshKey = 0 }) {
     recentIncomes,
   } = useDashboardData(userId, token, refreshKey + refreshKeyLocal);
 
+  const enrichIncomes = (incomesData) => {
+    return incomesData.map((income) => ({
+      ...income,
+      categoria_nome: incomeCategories.find((cat) => cat.id === income.categoria_id)?.nome || income.categoria_nome,
+    }));
+  };
+
+  const enrichedIncomes = enrichIncomes(incomes);
+
   const getTopIncome = (incomesList) => {
     if (!incomesList || incomesList.length === 0) return null;
     const grouped = incomesList.reduce((acc, inc) => {
-      const key = inc.origem || inc.categoria_nome || inc.categoria || 'Outras';
+      const key = inc.categoria_nome || inc.categoria || inc.origem || 'Outras';
       const value = Number(inc.valor) || 0;
       if (!acc[key]) acc[key] = { nome: key, total: 0, count: 0 };
       acc[key].total += value;
@@ -349,14 +338,7 @@ export default function Home({ userId, token, refreshKey = 0 }) {
     return Object.values(grouped).sort((a, b) => b.total - a.total)[0] || null;
   };
 
-  const topIncome = getTopIncome(incomes);
-
-  const enrichIncomes = (incomesData) => {
-    return incomesData.map((income) => ({
-      ...income,
-      categoria_nome: incomeCategories.find((cat) => cat.id === income.categoria_id)?.nome || income.categoria_nome,
-    }));
-  };
+  const topIncome = getTopIncome(enrichedIncomes);
 
   const enrichedRecentIncomes = enrichIncomes(recentIncomes);
 
@@ -383,6 +365,13 @@ export default function Home({ userId, token, refreshKey = 0 }) {
         type={popup.type}
         onClose={hidePopup}
       />
+
+      <div className="section-title">
+        <div>
+          <h2>Início</h2>
+          <p className="page-description">Visão geral do seu orçamento, transações recentes e ações rápidas.</p>
+        </div>
+      </div>
 
       <BudgetOverview
         monthlyBudget={monthlyBudget}

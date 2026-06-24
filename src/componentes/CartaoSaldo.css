@@ -22,7 +22,7 @@
 .balance-main .value {
   font-size: 1.9rem;
   margin: 0.2rem 0;
-  color: #2d9057;
+  color: var(--color-green-primary);
   font-weight: 800;
 }
 
@@ -41,9 +41,9 @@
 .value-sm {
   margin: 0;
   font-weight: 700;
-  color: #2d9057;
+  color: var(--color-green-primary);
 }
 
 .value-sm.spent {
-  color: #c74c3e;
+  color: var(--color-error);
 }

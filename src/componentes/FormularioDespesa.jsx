@@ -23,21 +23,21 @@ function ExpenseForm({ userId, token, onExpenseCreated, onNotification }) {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        console.log('📦 Carregando categorias do API...');
+        console.log('> Carregando categorias do API...');
         const data = await categoriesService.getAll(token);
-        console.log('✅ Categorias recebidas:', data);
+        console.log('✔ Categorias recebidas:', data);
         setCategories(data || []);
       } catch (err) {
         setError('Erro ao carregar categorias');
-        console.error('❌ Erro ao carregar categorias:', err);
+        console.error('✖ Erro ao carregar categorias:', err);
       }
     };
 
     if (token) {
-      console.log('🔑 Token existe:', token.substring(0, 20) + '...');
+      console.log('Token existe:', token.substring(0, 20) + '...');
       loadCategories();
     } else {
-      console.log('⚠️  Sem token - não carregando categorias');
+      console.log('⚠ Sem token - não carregando categorias');
     }
   }, [token]);
 

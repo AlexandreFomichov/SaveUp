@@ -13,28 +13,47 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 
-dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Carregar variáveis de ambiente a partir do ficheiro .env
+dotenv.config({ path: path.join(__dirname, '.env') });
 const distPath = path.join(__dirname, 'dist');
 
 console.log('🚀 Iniciando SaveUp Server...');
 console.log('📡 Conectando à base de dados...');
 console.log('  Host:', process.env.DB_HOST || 'localhost');
+console.log('  Port:', process.env.DB_PORT || '3306');
 console.log('  User:', process.env.DB_USER || 'root');
 console.log('  Database:', process.env.DB_NAME || 'saveup');
 console.log('');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  console.error('❌ JWT_SECRET não definido. Configure a variável de ambiente JWT_SECRET.');
+  process.exit(1);
+}
 
 // Middleware
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+];
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
-app.use(express.json({ charset: 'utf-8' }));
+app.use(express.json({ charset: 'utf-8', limit: '16kb', strict: true }));
 
 // Garantir UTF-8 apenas para as rotas de API
 app.use((req, res, next) => {
@@ -47,6 +66,7 @@ app.use((req, res, next) => {
 // Configuração do banco de dados
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306,
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'saveup',
@@ -65,12 +85,62 @@ const initializeTables = async () => {
     await connection.execute('SET NAMES utf8mb4');
     await connection.execute('SET CHARACTER SET utf8mb4');
 
+    // Criar tabela de utilizadores se não existir
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS sauveup_utilizadores (
+        id              INT(11)         NOT NULL AUTO_INCREMENT,
+        nome            VARCHAR(100)    NOT NULL,
+        email           VARCHAR(150)    NOT NULL UNIQUE,
+        palavra_passe   VARCHAR(255)    NOT NULL,
+        data_criacao    TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id)
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    // Criar tabela de categorias se não existir
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS sauveup_categorias (
+        id              INT(11)         NOT NULL AUTO_INCREMENT,
+        nome            VARCHAR(100)    NOT NULL,
+        PRIMARY KEY (id)
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
     // Criar tabela de categorias de rendimentos se não existir
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS sauveup_categorias_rendimentos (
         id              INT(11)         NOT NULL AUTO_INCREMENT,
         nome            VARCHAR(100)    NOT NULL,
         PRIMARY KEY (id)
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    // Criar tabela de despesas se não existir
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS sauveup_despesas (
+        id              INT(11)         NOT NULL AUTO_INCREMENT,
+        utilizador_id   INT(11)         NOT NULL,
+        categoria_id    INT(11)         DEFAULT NULL,
+        descricao       VARCHAR(255)    NOT NULL,
+        valor           DECIMAL(10,2)   NOT NULL,
+        data            DATE            NOT NULL,
+        data_registo    TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        FOREIGN KEY (utilizador_id) REFERENCES sauveup_utilizadores(id) ON DELETE CASCADE,
+        FOREIGN KEY (categoria_id)  REFERENCES sauveup_categorias(id) ON DELETE SET NULL
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    // Criar tabela de orcamentos se não existir
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS sauveup_orcamentos (
+        id              INT(11)         NOT NULL AUTO_INCREMENT,
+        utilizador_id   INT(11)         NOT NULL,
+        valor_mensal    DECIMAL(10,2)   NOT NULL,
+        mes             INT(2)          NOT NULL,
+        ano             INT(4)          NOT NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (utilizador_id) REFERENCES sauveup_utilizadores(id) ON DELETE CASCADE
       ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
     `);
 
@@ -148,13 +218,17 @@ const authenticateToken = (req, res, next) => {
     return res.status(401).json({ error: true, message: 'Token não fornecido' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || 'seu_segredo_aqui', (err, user) => {
+  jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(401).json({ error: true, message: 'Token inválido' });
     }
     req.user = user;
     next();
   });
+};
+
+const authorizeRequestUser = (req, resourceUserId) => {
+  return Number(req.user?.id) === Number(resourceUserId);
 };
 
 // ==================== INICIALIZAR SERVIDOR ====================
@@ -283,6 +357,10 @@ const startServer = async () => {
       const { userId } = req.params;
       const { startDate, endDate, categoriaId } = req.query;
 
+      if (!authorizeRequestUser(req, userId)) {
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       let query = `
         SELECT 
           d.id,
@@ -338,6 +416,10 @@ const startServer = async () => {
         return res.status(400).json({ error: true, message: 'Dados incompletos' });
       }
 
+      if (!authorizeRequestUser(req, utilizador_id)) {
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       const connection = await pool.getConnection();
       const [result] = await connection.execute(
         'INSERT INTO sauveup_despesas (utilizador_id, categoria_id, descricao, valor, data, data_registo) VALUES (?, ?, ?, ?, ?, NOW())',
@@ -372,6 +454,21 @@ const startServer = async () => {
       const { descricao, valor, categoria_id, data } = req.body;
 
       const connection = await pool.getConnection();
+      const [existing] = await connection.execute(
+        'SELECT utilizador_id FROM sauveup_despesas WHERE id = ?',
+        [id]
+      );
+
+      if (!existing.length) {
+        connection.release();
+        return res.status(404).json({ error: true, message: 'Despesa não encontrada' });
+      }
+
+      if (!authorizeRequestUser(req, existing[0].utilizador_id)) {
+        connection.release();
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       await connection.execute(
         'UPDATE sauveup_despesas SET descricao = ?, valor = ?, categoria_id = ?, data = ? WHERE id = ?',
         [descricao, valor, categoria_id, data, id]
@@ -393,6 +490,21 @@ const startServer = async () => {
       const { id } = req.params;
 
       const connection = await pool.getConnection();
+      const [existing] = await connection.execute(
+        'SELECT utilizador_id FROM sauveup_despesas WHERE id = ?',
+        [id]
+      );
+
+      if (!existing.length) {
+        connection.release();
+        return res.status(404).json({ error: true, message: 'Despesa não encontrada' });
+      }
+
+      if (!authorizeRequestUser(req, existing[0].utilizador_id)) {
+        connection.release();
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       await connection.execute('DELETE FROM sauveup_despesas WHERE id = ?', [id]);
       connection.release();
 
@@ -499,6 +611,10 @@ const startServer = async () => {
       const { userId } = req.params;
       const { mes, ano } = req.query;
 
+      if (!authorizeRequestUser(req, userId)) {
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       let query = 'SELECT * FROM sauveup_orcamentos WHERE utilizador_id = ?';
       const params = [userId];
 
@@ -527,6 +643,10 @@ const startServer = async () => {
 
       if (!utilizador_id || !valor_mensal || !mes || !ano) {
         return res.status(400).json({ error: true, message: 'Dados incompletos' });
+      }
+
+      if (!authorizeRequestUser(req, utilizador_id)) {
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
       }
 
       const connection = await pool.getConnection();
@@ -558,6 +678,21 @@ const startServer = async () => {
       const { valor_mensal } = req.body;
 
       const connection = await pool.getConnection();
+      const [existing] = await connection.execute(
+        'SELECT utilizador_id FROM sauveup_orcamentos WHERE id = ?',
+        [id]
+      );
+
+      if (!existing.length) {
+        connection.release();
+        return res.status(404).json({ error: true, message: 'Orçamento não encontrado' });
+      }
+
+      if (!authorizeRequestUser(req, existing[0].utilizador_id)) {
+        connection.release();
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       await connection.execute(
         'UPDATE sauveup_orcamentos SET valor_mensal = ? WHERE id = ?',
         [valor_mensal, id]
@@ -577,6 +712,10 @@ const startServer = async () => {
     try {
       const { userId } = req.params;
       const { startDate, endDate } = req.query;
+
+      if (!authorizeRequestUser(req, userId)) {
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
 
       let query = `
         SELECT 
@@ -623,6 +762,10 @@ const startServer = async () => {
         return res.status(400).json({ error: true, message: 'Dados incompletos' });
       }
 
+      if (!authorizeRequestUser(req, utilizador_id)) {
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       const connection = await pool.getConnection();
       const [result] = await connection.execute(
         'INSERT INTO sauveup_rendimentos_extra (utilizador_id, categoria_id, origem, valor, data) VALUES (?, ?, ?, ?, ?)',
@@ -649,6 +792,21 @@ const startServer = async () => {
       const { categoria_id, origem, valor, data } = req.body;
 
       const connection = await pool.getConnection();
+      const [existing] = await connection.execute(
+        'SELECT utilizador_id FROM sauveup_rendimentos_extra WHERE id = ?',
+        [id]
+      );
+
+      if (!existing.length) {
+        connection.release();
+        return res.status(404).json({ error: true, message: 'Rendimento não encontrado' });
+      }
+
+      if (!authorizeRequestUser(req, existing[0].utilizador_id)) {
+        connection.release();
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       await connection.execute(
         'UPDATE sauveup_rendimentos_extra SET categoria_id = ?, origem = ?, valor = ?, data = ? WHERE id = ?',
         [categoria_id || null, origem, valor, data, id]
@@ -667,6 +825,21 @@ const startServer = async () => {
       const { id } = req.params;
 
       const connection = await pool.getConnection();
+      const [existing] = await connection.execute(
+        'SELECT utilizador_id FROM sauveup_rendimentos_extra WHERE id = ?',
+        [id]
+      );
+
+      if (!existing.length) {
+        connection.release();
+        return res.status(404).json({ error: true, message: 'Rendimento não encontrado' });
+      }
+
+      if (!authorizeRequestUser(req, existing[0].utilizador_id)) {
+        connection.release();
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       await connection.execute('DELETE FROM sauveup_rendimentos_extra WHERE id = ?', [id]);
       connection.release();
 
@@ -764,6 +937,21 @@ const startServer = async () => {
       const { categoria_id, origem, valor, data } = req.body;
 
       const connection = await pool.getConnection();
+      const [existing] = await connection.execute(
+        'SELECT utilizador_id FROM sauveup_rendimentos_extra WHERE id = ?',
+        [id]
+      );
+
+      if (!existing.length) {
+        connection.release();
+        return res.status(404).json({ error: true, message: 'Receita não encontrada' });
+      }
+
+      if (!authorizeRequestUser(req, existing[0].utilizador_id)) {
+        connection.release();
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       await connection.execute(
         'UPDATE sauveup_rendimentos_extra SET categoria_id = ?, origem = ?, valor = ?, data = ? WHERE id = ?',
         [categoria_id || null, origem, valor, data, id]
@@ -785,6 +973,21 @@ const startServer = async () => {
       const { id } = req.params;
 
       const connection = await pool.getConnection();
+      const [existing] = await connection.execute(
+        'SELECT utilizador_id FROM sauveup_rendimentos_extra WHERE id = ?',
+        [id]
+      );
+
+      if (!existing.length) {
+        connection.release();
+        return res.status(404).json({ error: true, message: 'Receita não encontrada' });
+      }
+
+      if (!authorizeRequestUser(req, existing[0].utilizador_id)) {
+        connection.release();
+        return res.status(403).json({ error: true, message: 'Acesso não autorizado' });
+      }
+
       await connection.execute('DELETE FROM sauveup_rendimentos_extra WHERE id = ?', [id]);
       connection.release();
 

@@ -1,5 +1,4 @@
 .dropdown { position: relative; }
-.drop-btn { background: var(--color-white); border: 1px solid #d1d5db; padding: 0.5rem 0.7rem; border-radius: 10px; cursor: pointer; color: var(--color-text-primary); }
-.drop-list { position: absolute; right: 0; top: calc(100% + 8px); background: var(--color-white); border-radius: 14px; box-shadow: 0 12px 28px rgba(26, 26, 26, 0.12); padding: 0.5rem; display: flex; flex-direction: column; gap: 0.35rem; min-width: 180px; z-index: 20; }
-.drop-list a { padding: 0.65rem 0.75rem; color: var(--color-text-primary); text-decoration: none; border-radius: 8px; }
-.drop-list a:hover { background: linear-gradient(135deg, rgba(45, 144, 87, 0.06) 0%, rgba(82, 183, 136, 0.1) 100%); }
+.drop-btn { background: var(--color-white); border: 1px solid var(--color-border); padding: var(--spacing-sm); border-radius: var(--border-radius-md); cursor: pointer; color: var(--color-text-primary); font-size: var(--font-size-sm); }
+.drop-list { position: absolute; right: 0; top: calc(100% + 8px); background: var(--color-white); border-radius: var(--border-radius-lg); box-shadow: var(--shadow-md); padding: var(--spacing-sm); display: flex; flex-direction: column; gap: 0.35rem; min-width: 180px; z-index: 20; }
+.drop-list a { padding: var(--spacing-sm); color: var(--color-text-primary); text-decoration: none; border-radius: var(--border-radius-md); font-size: var(--font-size-sm); }

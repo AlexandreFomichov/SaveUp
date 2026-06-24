@@ -21,6 +21,12 @@ export const formatCurrency = (value, decimals = 2) => {
   }).format(value);
 };
 
+export const formatCurrencyRounded = (value) => {
+  const numericValue = typeof value === 'string' ? parseFloat(value.replace(',', '.')) : value;
+  if (typeof numericValue !== 'number' || isNaN(numericValue)) return `${CONFIG.CURRENCY_SYMBOL}0`;
+  return formatCurrency(Math.round(numericValue), 0);
+};
+
 /**
  * Formata uma data para o formato legível (DD/MM/YYYY)
  * @param {string|Date} date - Data a formatar

@@ -12,7 +12,12 @@ function BudgetPage({ userId, token }) {
 
   return (
     <div className="page-container">
-      <h2 className="page-title">Orçamento</h2>
+      <div className="section-title">
+        <div>
+          <h2>Orçamento</h2>
+          <p className="page-description">Gerencie o seu orçamento mensal com clareza e acompanhe os gastos em tempo real.</p>
+        </div>
+      </div>
       <div className="page-single">
         <BudgetPanel userId={userId} token={token} onBudgetUpdated={handleBudgetUpdated} />
       </div>

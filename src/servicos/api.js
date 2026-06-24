@@ -3,31 +3,19 @@
  * Define todas as chamadas HTTP para comunicar com o backend
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+import { fetchWithAuth } from './http';
 
-console.log('🔌 API Service Initialized:');
-console.log('  - API_BASE_URL:', API_BASE_URL);
-console.log('  - VITE_USE_MOCK_DATA:', import.meta.env.VITE_USE_MOCK_DATA);
-console.log('  - USE_MOCK (calculated):', import.meta.env.VITE_USE_MOCK_DATA === 'true');
+const API_BASE_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' ? `${window.location.origin}/api` : 'http://localhost:3000/api');
 
-/**
- * Configuração comum para requisições
- */
 const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
-/**
- * Função auxiliar para gerir erros (sincrona)
- * Mantemos simples: logamos e re-lançamos o erro para que os callers
- * possam capturá-lo corretamente (evita usar async aqui).
- */
 const handleError = (error) => {
   console.error('API Error:', error);
   throw error;
 };
 
-// Modo mock controlado por variável de ambiente VITE_USE_MOCK_DATA
 const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 import { mockExpenses, mockCategories, mockBudget, mockIncomeCategories, mockIncomesExtra, delay } from './dadosMock';
 
@@ -37,46 +25,31 @@ import { mockExpenses, mockCategories, mockBudget, mockIncomeCategories, mockInc
  */
 export let authService = {
   login: async (email, password) => {
-    try {
-      console.log('🔐 authService.login chamado - usando API real (não mock)');
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: defaultHeaders,
-        body: JSON.stringify({ email, password }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Falha ao fazer login');
-      }
-      
-      const jsonResponse = await response.json();
-      console.log('✅ API retornou:', jsonResponse);
-      return jsonResponse;
-    } catch (error) {
-      console.error('Login Error:', error);
-      throw error;
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: defaultHeaders,
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message || 'Falha ao fazer login');
     }
+    return data;
   },
 
   register: async (nome, email, password) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
-        method: 'POST',
-        headers: defaultHeaders,
-        body: JSON.stringify({ nome, email, password }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Falha ao registar');
-      }
-      
-      return await response.json();
-    } catch (error) {
-      console.error('Register Error:', error);
-      throw error;
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: defaultHeaders,
+      body: JSON.stringify({ nome, email, password }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message || 'Falha ao registar');
     }
+    return data;
   },
 };
 
@@ -85,107 +58,49 @@ export let authService = {
  */
 export let expensesService = {
   getAll: async (userId, token) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/despesas/${userId}`, {
-        method: 'GET',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error('Falha ao obter despesas');
-      return await response.json();
-    } catch (error) {
-      handleError(error);
-    }
+    return fetchWithAuth(`/despesas/${userId}`, { method: 'GET' }, token);
   },
 
   getByDateRange: async (userId, startDate, endDate, token) => {
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/despesas/${userId}?startDate=${startDate}&endDate=${endDate}`,
-        {
-          method: 'GET',
-          headers: {
-            ...defaultHeaders,
-            'Authorization': `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) throw new Error('Falha ao obter despesas');
-      return await response.json();
-    } catch (error) {
-      handleError(error);
-    }
+    return fetchWithAuth(
+      `/despesas/${userId}?startDate=${startDate}&endDate=${endDate}`,
+      { method: 'GET' },
+      token
+    );
   },
 
   getByCategory: async (userId, categoryId, token) => {
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/despesas/${userId}?categoriaId=${categoryId}`,
-        {
-          method: 'GET',
-          headers: {
-            ...defaultHeaders,
-            'Authorization': `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) throw new Error('Falha ao obter despesas');
-      return await response.json();
-    } catch (error) {
-      handleError(error);
-    }
+    return fetchWithAuth(
+      `/despesas/${userId}?categoriaId=${categoryId}`,
+      { method: 'GET' },
+      token
+    );
   },
 
   create: async (userId, expense, token) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/despesas`, {
+    return fetchWithAuth(
+      '/despesas',
+      {
         method: 'POST',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
         body: JSON.stringify({ ...expense, utilizador_id: userId }),
-      });
-      if (!response.ok) throw new Error('Falha ao criar despesa');
-      return await response.json();
-    } catch (error) {
-      handleError(error);
-    }
+      },
+      token
+    );
   },
 
   update: async (expenseId, expense, token) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/despesas/${expenseId}`, {
+    return fetchWithAuth(
+      `/despesas/${expenseId}`,
+      {
         method: 'PUT',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
         body: JSON.stringify(expense),
-      });
-      if (!response.ok) throw new Error('Falha ao atualizar despesa');
-      return await response.json();
-    } catch (error) {
-      handleError(error);
-    }
+      },
+      token
+    );
   },
 
   delete: async (expenseId, token) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/despesas/${expenseId}`, {
-        method: 'DELETE',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error('Falha ao eliminar despesa');
-      return await response.json();
-    } catch (error) {
-      handleError(error);
-    }
+    return fetchWithAuth(`/despesas/${expenseId}`, { method: 'DELETE' }, token);
   },
 };
 
@@ -195,7 +110,7 @@ export let expensesService = {
 export let categoriesService = {
   getAll: async (token) => {
     try {
-      console.log('📡 categoriesService.getAll - Requisição ao backend');
+      console.log('→ categoriesService.getAll - Requisição ao backend');
       const response = await fetch(`${API_BASE_URL}/categorias`, {
         method: 'GET',
         headers: {
@@ -205,10 +120,10 @@ export let categoriesService = {
       });
       if (!response.ok) throw new Error('Falha ao obter categorias');
       const data = await response.json();
-      console.log('✅ Categorias retornadas:', data);
+      console.log('✔ Categorias retornadas:', data);
       return data;
     } catch (error) {
-      console.error('❌ erro em categoriesService.getAll:', error);
+      console.error('✖ erro em categoriesService.getAll:', error);
       return [];
     }
   },

@@ -12,7 +12,12 @@ function DepositsPage({ userId, token }) {
 
   return (
     <div className="page-container">
-      <h2 className="page-title">Depósitos</h2>
+      <div className="section-title">
+        <div>
+          <h2>Depósitos</h2>
+          <p className="page-description">Simule depósitos a prazo e veja o rendimento ao longo do tempo com um layout claro e consistente.</p>
+        </div>
+      </div>
       <div className="page-single">
         <DepositSimulator userId={userId} token={token} onDepositSaved={handleDepositSaved} />
       </div>

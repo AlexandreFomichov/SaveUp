@@ -1,9 +1,16 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { authService } from '../servicos/api';
+import { useAuth } from '../context/AuthContext';
 import './Paginas.css';
 import './Login.css';
 
-export default function LoginPage({ onLoginSuccess }) {
+export default function LoginPage() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
+
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -67,19 +74,14 @@ export default function LoginPage({ onLoginSuccess }) {
       let response;
       
       if (isLogin) {
-        // Login
-        console.log('📝 Tentando login com:', formData.email);
         response = await authService.login(formData.email, formData.password);
-        console.log('✅ Login bem-sucedido! Response:', response);
       } else {
-        // Registro
         response = await authService.register(
           formData.nome,
           formData.email,
           formData.password
         );
         setSuccess('Conta criada com sucesso! Por favor, faça login.');
-        // Limpar formulário e voltar para login
         setFormData({
           email: '',
           password: '',
@@ -91,21 +93,13 @@ export default function LoginPage({ onLoginSuccess }) {
         return;
       }
 
-      // Guardar token no localStorage
       if (response.token) {
-        console.log('💾 Guardando no localStorage...');
-        localStorage.setItem('authToken', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-
+        login(response.user, response.token);
         setSuccess('Login realizado com sucesso!');
-        setTimeout(() => {
-          // Passar também o token para que o App.jsx atualize o estado
-          console.log('🔔 Chamando onLoginSuccess com:', response.user);
-          onLoginSuccess(response.user, response.token);
-        }, 500);
+        setTimeout(() => navigate(from, { replace: true }), 300);
       }
     } catch (err) {
-      console.error('❌ Erro no login:', err);
+      console.error('✖ Erro no login:', err);
       setError(err.message || 'Erro ao processar pedido');
     } finally {
       setLoading(false);
@@ -149,10 +143,14 @@ export default function LoginPage({ onLoginSuccess }) {
                 type="email"
                 id="email"
                 name="email"
+                autoComplete="email"
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="seu.email@exemplo.com"
                 disabled={loading}
+                aria-invalid={error.includes('Email') ? 'true' : 'false'}
+                aria-describedby={error.includes('Email') ? 'email-error' : undefined}
+                required
               />
             </div>
 
@@ -163,10 +161,14 @@ export default function LoginPage({ onLoginSuccess }) {
                 type="password"
                 id="password"
                 name="password"
+                autoComplete={isLogin ? 'current-password' : 'new-password'}
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Digite sua palavra-passe"
                 disabled={loading}
+                aria-invalid={error.includes('palavra-passe') ? 'true' : 'false'}
+                aria-describedby={error.includes('palavra-passe') ? 'password-error' : undefined}
+                required
               />
             </div>
 
@@ -215,7 +217,7 @@ export default function LoginPage({ onLoginSuccess }) {
                 }}
                 className="toggle-btn"
                 disabled={loading}
-              >
+>
                 {isLogin ? 'Criar Conta' : 'Fazer Login'}
               </button>
             </p>

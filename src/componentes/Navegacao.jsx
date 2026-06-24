@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import './Navegacao.css';
 import Logo from './Logo';
 
@@ -6,14 +7,52 @@ import Logo from './Logo';
  * Componente de Navegação
  * Fornece navegação entre as diferentes seções da aplicação (Despesas, Orçamento, Depósitos)
  */
-function Navigation({ activeTab, onTabChange, user, onLogout }) {
+function Navigation({ user, onLogout }) {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const tabs = [
-    { id: 'home', label: 'Início' },
-    { id: 'expenses', label: 'Despesas' },
-    { id: 'budget', label: 'Orçamento' },
-    { id: 'deposits', label: 'Depósitos' },
+    {
+      path: '/',
+      label: 'Início',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M3 11.5L12 4l9 7.5" />
+          <path d="M5 21h14a1 1 0 0 0 1-1V11" />
+          <path d="M9 21V12h6v9" />
+        </svg>
+      ),
+    },
+    {
+      path: '/despesas',
+      label: 'Despesas',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="8" />
+          <path d="M8 12h8" />
+        </svg>
+      ),
+    },
+    {
+      path: '/orcamento',
+      label: 'Orçamento',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="4" y="10" width="4" height="8" />
+          <rect x="10" y="6" width="4" height="12" />
+          <rect x="16" y="2" width="4" height="16" />
+        </svg>
+      ),
+    },
+    {
+      path: '/depositos',
+      label: 'Depósitos',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="12" cy="10" r="4" />
+          <path d="M8 20c1-1 3-2 4-2s3 1 4 2" />
+        </svg>
+      ),
+    },
   ];
 
   const handleLogout = () => {
@@ -22,36 +61,40 @@ function Navigation({ activeTab, onTabChange, user, onLogout }) {
   };
 
   return (
-    <nav className="navigation">
+    <nav className="navigation" aria-label="Menu principal">
       <div className="nav-container">
         <div className="nav-logo">
           <Logo />
         </div>
-        
+
         <div className="nav-tabs">
           {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              className={`nav-tab ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => onTabChange(tab.id)}
+            <NavLink
+              key={tab.path}
+              to={tab.path}
+              className={({ isActive }) => `nav-tab${isActive ? ' active' : ''}`}
+              end={tab.path === '/'}
             >
+              <span className="tab-icon">{tab.icon}</span>
               {tab.label}
-            </button>
+            </NavLink>
           ))}
         </div>
 
         <div className="nav-user">
           <div className="user-profile">
-            <button 
+            <button
               className="user-btn"
               onClick={() => setShowUserMenu(!showUserMenu)}
               title={user?.nome}
+              aria-expanded={showUserMenu}
+              aria-haspopup="true"
             >
               <span className="user-avatar">{user?.nome?.charAt(0).toUpperCase() || 'S'}</span>
             </button>
-            
+
             {showUserMenu && (
-              <div className="user-menu">
+              <div className="user-menu" role="menu">
                 <div className="user-menu-header">
                   <p className="user-name">{user?.nome}</p>
                   <p className="user-email">{user?.email}</p>
@@ -60,6 +103,7 @@ function Navigation({ activeTab, onTabChange, user, onLogout }) {
                 <button
                   className="user-menu-item logout-btn"
                   onClick={handleLogout}
+                  role="menuitem"
                 >
                   Sair
                 </button>
