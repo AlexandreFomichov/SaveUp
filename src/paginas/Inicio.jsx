@@ -46,24 +46,6 @@ function BudgetOverview({ monthlyBudget, totalSpent, totalIncomes, available, pe
 
       <div className="budget-card card">
         <div className="budget-info">
-          <div className="budget-item budget-remaining">
-            <span className="label">Restante</span>
-            <strong className={`value ${available >= 0 ? 'positive' : 'negative'}`}>
-              {formatCurrency(available)}
-            </strong>
-          </div>
-          <div className="budget-item budget-spent">
-            <span className="label">Despesas Realizadas</span>
-            <strong className="value negative">{formatCurrency(totalSpent)}</strong>
-          </div>
-          <div className="budget-item budget-monthly">
-            <span className="label">Orçamento Mensal</span>
-            <strong className="value">{formatCurrency(monthlyBudget)}</strong>
-          </div>
-          <div className="budget-item budget-income">
-            <span className="label">Rendimentos Extra</span>
-            <strong className="value positive">{formatCurrency(totalIncomes)}</strong>
-          </div>
           {current && (
             <div className="budget-item budget-category">
               <div className="budget-category-left">
@@ -93,6 +75,30 @@ function BudgetOverview({ monthlyBudget, totalSpent, totalIncomes, available, pe
               </button>
             </div>
           )}
+          
+          <div className="budget-item budget-combined-monthly">
+            <div className="budget-combined-left">
+              <span className="label">Orçamento Mensal</span>
+              <strong className="value">{formatCurrency(monthlyBudget)}</strong>
+            </div>
+            <div className="budget-combined-right">
+              <span className="label">Restante</span>
+              <strong className={`value ${available >= 0 ? 'positive' : 'negative'}`}>
+                {formatCurrency(available)}
+              </strong>
+            </div>
+          </div>
+
+          <div className="budget-item budget-combined-spent">
+            <div className="budget-combined-left">
+              <span className="label">Despesas Realizadas</span>
+              <strong className="value negative">{formatCurrency(totalSpent)}</strong>
+            </div>
+            <div className="budget-combined-right">
+              <span className="label">Rendimentos Extra</span>
+              <strong className="value positive">{formatCurrency(totalIncomes)}</strong>
+            </div>
+          </div>
         </div>
 
         <div className="budget-right">

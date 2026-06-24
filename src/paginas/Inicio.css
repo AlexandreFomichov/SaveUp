@@ -189,11 +189,15 @@
 }
 
 .budget-info {
+  grid-template-columns: 1fr;
+}
+
+.transactions-grid {
   grid-template-columns: repeat(2, 1fr);
 }
 
-.home-actions-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.insights-grid {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 @media (max-width: 920px) {
@@ -203,6 +207,10 @@
   .budget-card {
     grid-template-columns: 1fr;
   }
+}
+
+.home-actions-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .actions-tabs {
@@ -230,14 +238,6 @@
   box-shadow: var(--shadow-md);
 }
 
-.transactions-grid {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.insights-grid {
-  grid-template-columns: repeat(3, 1fr);
-}
-
 .budget-item {
   display: flex;
   flex-direction: column;
@@ -246,13 +246,6 @@
   background: var(--color-surface);
   border-radius: 1.1rem;
   border: 1px solid var(--color-border);
-}
-
-.budget-item.budget-remaining {
-  grid-column: 1 / -1;
-  padding: 1.4rem;
-  background: var(--color-surface);
-  border-color: var(--color-border);
 }
 
 .budget-item.budget-category {
@@ -265,6 +258,19 @@
   background: var(--color-surface);
   border-color: var(--color-border);
   box-shadow: var(--shadow-sm);
+}
+
+/* Reordenar items do orçamento */
+.budget-item.budget-category {
+  grid-row: 1;
+}
+
+.budget-item.budget-combined-monthly {
+  grid-row: 2;
+}
+
+.budget-item.budget-combined-spent {
+  grid-row: 3;
 }
 
 .budget-category-left {
@@ -377,6 +383,22 @@
 
 .budget-item .value.negative {
   color: var(--color-error);
+}
+
+.budget-item.budget-combined-monthly,
+.budget-item.budget-combined-spent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+  padding: 1.2rem;
+}
+
+.budget-combined-left,
+.budget-combined-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .budget-alert {
