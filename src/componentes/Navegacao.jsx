@@ -9,6 +9,7 @@ import Logo from './Logo';
  */
 function Navigation({ user, onLogout }) {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showPagesMenu, setShowPagesMenu] = useState(false);
 
   const tabs = [
     {
@@ -82,6 +83,34 @@ function Navigation({ user, onLogout }) {
         </div>
 
         <div className="nav-user">
+          <div className="pages-menu-wrapper">
+            <button
+              className="pages-menu-btn"
+              onClick={() => setShowPagesMenu(!showPagesMenu)}
+              title="Menu de Páginas"
+              aria-expanded={showPagesMenu}
+              aria-haspopup="true"
+            >
+              <span className="menu-icon">☰</span>
+            </button>
+
+            {showPagesMenu && (
+              <div className="pages-dropdown" role="menu">
+                {tabs.map((tab) => (
+                  <NavLink
+                    key={tab.path}
+                    to={tab.path}
+                    className="pages-dropdown-item"
+                    onClick={() => setShowPagesMenu(false)}
+                  >
+                    <span className="dropdown-icon">{tab.icon}</span>
+                    {tab.label}
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
+
           <div className="user-profile">
             <button
               className="user-btn"

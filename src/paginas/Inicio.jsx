@@ -57,7 +57,7 @@ function BudgetOverview({ monthlyBudget, totalSpent, totalIncomes, available, pe
           </div>
 
           <div className="budget-item budget-remaining-only">
-            <span className="label">Orçamento Restante</span>
+            <span className="label">Restante</span>
             <strong className={`value ${available >= 0 ? 'positive' : 'negative'}`}>
               {formatCurrency(available)}
             </strong>
