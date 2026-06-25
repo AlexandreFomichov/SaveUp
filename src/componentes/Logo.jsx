@@ -19,7 +19,6 @@ function Logo({ className = '', size = 'medium' }) {
       {!imageError ? (
         <img 
           src="/src/assets/images/logo.png" 
-          alt="Logo SaveUp" 
           className="logo-image"
           onError={() => setImageError(true)}
         />
