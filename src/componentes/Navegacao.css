@@ -428,6 +428,7 @@
     justify-content: flex-start;
     gap: 0.5rem;
     padding: 0.75rem 1rem;
+    position: relative;
   }
 
   .nav-logo {
@@ -457,11 +458,21 @@
 
   .pages-menu-wrapper {
     display: flex;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    z-index: 5;
   }
 
   .nav-user {
-    display: flex;
-    align-items: center;
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    z-index: 10;
   }
 
   .nav-tabs::-webkit-scrollbar {
