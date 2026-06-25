@@ -67,37 +67,37 @@ function BudgetOverview({ monthlyBudget, totalSpent, totalIncomes, available, pe
             <span className="label">Rendimentos Extra</span>
             <strong className="value positive">{formatCurrency(totalIncomes)}</strong>
           </div>
+        </div>
 
-          {current && (
-            <div className="budget-item budget-category">
-              <div className="budget-category-left">
-                <span className="label">{mode === 'expense' ? 'Categoria com maior gasto' : 'Rendimento extra com maior ganho'}</span>
-                <strong className={`value category-value ${animating ? 'fade-out' : 'fade-in'}`}>
-                  {current.nome}
-                </strong>
+        {current && (
+          <div className="budget-item budget-category">
+            <div className="budget-category-left">
+              <span className="label">{mode === 'expense' ? 'Categoria com maior gasto' : 'Rendimento extra com maior ganho'}</span>
+              <strong className={`value category-value ${animating ? 'fade-out' : 'fade-in'}`}>
+                {current.nome}
+              </strong>
 
-                <div className="category-chart">
-                  <div className="category-chart-meta">
-                    <span>{mode === 'expense' ? 'Parte das despesas' : 'Parte das receitas'}</span>
-                    <strong>{currentShare}%</strong>
-                  </div>
-                  <div className="category-chart-bar">
-                    <div className="category-chart-fill" style={{ width: `${currentShare}%` }} />
-                  </div>
+              <div className="category-chart">
+                <div className="category-chart-meta">
+                  <span>{mode === 'expense' ? 'Parte das despesas' : 'Parte das receitas'}</span>
+                  <strong>{currentShare}%</strong>
+                </div>
+                <div className="category-chart-bar">
+                  <div className="category-chart-fill" style={{ width: `${currentShare}%` }} />
                 </div>
               </div>
-
-              <button
-                type="button"
-                className={`category-toggle ${animating ? 'busy' : ''}`}
-                onClick={handleToggle}
-                aria-label="Alternar categoria/ganho"
-              >
-                <span className={`toggle-icon ${mode === 'income' ? 'rotate' : ''}`}>⇄</span>
-              </button>
             </div>
-          )}
-        </div>
+
+            <button
+              type="button"
+              className={`category-toggle ${animating ? 'busy' : ''}`}
+              onClick={handleToggle}
+              aria-label="Alternar categoria/ganho"
+            >
+              <span className={`toggle-icon ${mode === 'income' ? 'rotate' : ''}`}>⇄</span>
+            </button>
+          </div>
+        )}
 
         <div className="budget-right">
           <div className="progress-panel">
