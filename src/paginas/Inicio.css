@@ -62,8 +62,14 @@
 .budget-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
   gap: 1.5rem;
   align-items: stretch;
+}
+
+.budget-info {
+  grid-row: 1;
+  grid-column: 1 / 2;
 }
 
 .budget-right {
@@ -71,6 +77,13 @@
   gap: 1rem;
   grid-template-rows: auto 1fr;
   min-height: 100%;
+  grid-row: 1;
+  grid-column: 2 / 3;
+}
+
+.budget-item.budget-category {
+  grid-column: 1 / -1;
+  grid-row: 2;
 }
 
 .budget-trend-card {
@@ -869,15 +882,29 @@
 
   .budget-card {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
     gap: 1.25rem;
   }
 
-  .budget-right {
+  .budget-info {
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: 1fr;
     gap: 0.85rem;
   }
 
-  .budget-info {
-    grid-template-columns: 1fr;
+  .budget-item.budget-category {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .budget-right {
+    grid-column: 1;
+    grid-row: 3;
     gap: 0.85rem;
   }
 
