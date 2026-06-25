@@ -1,5 +1,6 @@
 import React from 'react';
 import './Logo.css';
+import logoImage from '../assets/images/logo.png';
 
 /**
  * Componente de Logo
@@ -18,7 +19,8 @@ function Logo({ className = '', size = 'medium' }) {
     <div className={`logo-wrapper ${sizeClasses[size]} ${className}`}>
       {!imageError ? (
         <img 
-          src="/src/assets/images/logo.png" 
+          src={logoImage}
+          alt="SaveUp"
           className="logo-image"
           onError={() => setImageError(true)}
         />
