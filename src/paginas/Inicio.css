@@ -62,14 +62,14 @@
 .budget-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
   gap: 1.5rem;
   align-items: stretch;
 }
 
 .budget-info {
-  grid-row: 1;
-  grid-column: 1 / 2;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr 1fr;
 }
 
 .budget-right {
@@ -77,13 +77,10 @@
   gap: 1rem;
   grid-template-rows: auto 1fr;
   min-height: 100%;
-  grid-row: 1;
-  grid-column: 2 / 3;
 }
 
 .budget-item.budget-category {
   grid-column: 1 / -1;
-  grid-row: 2;
 }
 
 .budget-trend-card {
