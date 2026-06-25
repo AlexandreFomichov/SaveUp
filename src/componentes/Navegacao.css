@@ -467,7 +467,12 @@
   }
 
   .nav-user {
-    display: block;
+    display: flex;
+    align-items: center;
+    position: static;
+  }
+
+  .user-profile {
     position: absolute;
     top: 50%;
     right: 0.75rem;
