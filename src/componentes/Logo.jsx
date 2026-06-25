@@ -18,7 +18,7 @@ function Logo({ className = '', size = 'medium' }) {
     <div className={`logo-wrapper ${sizeClasses[size]} ${className}`}>
       {!imageError ? (
         <img 
-          src="/src/assets/images/Logo SaveUp - PAP.png" 
+          src="/src/assets/images/logo.png" 
           alt="Logo SaveUp" 
           className="logo-image"
           onError={() => setImageError(true)}
