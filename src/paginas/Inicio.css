@@ -207,6 +207,12 @@
   .budget-card {
     grid-template-columns: 1fr;
   }
+
+  .budget-info,
+  .budget-right {
+    grid-column: auto;
+    grid-row: auto;
+  }
 }
 
 .home-actions-grid {
