@@ -866,17 +866,6 @@
     gap: 1.25rem;
   }
 
-  /* Allow budget-info children to participate in the parent grid on small screens
-     so the "budget-category" item can span the full width of the budget-card. */
-  .budget-info {
-    display: contents;
-  }
-
-  /* Ensure the category item spans the full width when it becomes a direct child */
-  .budget-card > .budget-item.budget-category {
-    grid-column: 1 / -1;
-  }
-
   .budget-right {
     gap: 0.85rem;
   }
