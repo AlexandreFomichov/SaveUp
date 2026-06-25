@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo - Categoria Maior Gasto</title>
+    <style>
+        :root {
+            --color-text-primary: #1a1a1a;
+            --color-text-secondary: #666;
+            --color-surface: #ffffff;
+            --color-white: #ffffff;
+            --color-border: #e0e0e0;
+            --color-accent: #2d9057;
+            --color-green-primary: #2d9057;
+            --color-green-dark: #1f5a45;
+            --color-green-light: #8dcbb8;
+            --color-green-lighter: #d5ebe8;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --border-radius-lg: 0.9rem;
+            --border-radius-md: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-xs: 0.75rem;
+            --font-weight-bold: 700;
+            --font-weight-extrabold: 800;
+            --line-height-normal: 1.5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: #f5f5f5;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--color-green-dark);
+        }
+
+        .budget-info {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .budget-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 1.2rem;
+            background: var(--color-surface);
+            border-radius: 1.1rem;
+            border: 1px solid var(--color-border);
+        }
+
+        .budget-item.budget-category {
+            grid-column: 1 / -1;
+            grid-row: 3;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1.25rem 1.4rem;
+            background: var(--color-surface);
+            border-color: var(--color-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .budget-category-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .budget-category-left .label {
+            display: block;
+        }
+
+        .budget-item .label {
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 700;
+        }
+
+        .budget-item .value {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: var(--color-green-primary);
+        }
+
+        .category-chart {
+            margin-top: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            width: 100%;
+        }
+
+        .category-chart-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+        }
+
+        .category-chart-bar {
+            width: 100%;
+            height: 11px;
+            background: var(--color-green-lighter);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .category-chart-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, var(--color-green-light), var(--color-green-primary));
+            border-radius: 999px;
+        }
+
+        .category-toggle {
+            border: none;
+            background: var(--color-green-lighter);
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toggle-icon {
+            font-size: 1.15rem;
+            color: var(--color-green-dark);
+        }
+
+        /* MOBILE STYLES */
+        @media (max-width: 768px) {
+            .budget-item.budget-category {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .budget-category-left {
+                width: 100%;
+            }
+
+            .category-toggle {
+                align-self: center;
+                width: 100%;
+                max-width: 42px;
+                margin-top: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .budget-item.budget-category {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.65rem;
+                padding: 0.85rem;
+            }
+
+            .budget-category-left {
+                width: 100%;
+            }
+        }
+
+        .demo-info {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="demo-info">
+            <strong>Demo Mobile (768px e abaixo)</strong>
+            <p>O cartão deve ocupar 100% da largura disponível.</p>
+        </div>
+
+        <h1>Orçamento</h1>
+
+        <div class="budget-info">
+            <div class="budget-item budget-category">
+                <div class="budget-category-left">
+                    <span class="label">Categoria com maior gasto</span>
+                    <strong class="value">Alimentação</strong>
+
+                    <div class="category-chart">
+                        <div class="category-chart-meta">
+                            <span>Parte das despesas</span>
+                            <strong>42%</strong>
+                        </div>
+                        <div class="category-chart-bar">
+                            <div class="category-chart-fill" style="width: 42%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="category-toggle" aria-label="Alternar categoria/ganho">
+                    <span class="toggle-icon">⇄</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simular redimensionamento para testar diferentes breakpoints
+        console.log('Abra o DevTools (F12) e use o Device Toggle para testar diferentes tamanhos de tela.');
+    </script>
+</body>
+</html>
