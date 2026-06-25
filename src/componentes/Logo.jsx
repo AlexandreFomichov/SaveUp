@@ -1,14 +1,11 @@
 import React from 'react';
 import './Logo.css';
-import logoImage from '../assets/images/logo.png';
 
 /**
  * Componente de Logo
- * Exibe a logo da aplicação SaveUp
+ * Exibe a logo da aplicação SaveUp em CSS/JSX
  */
 function Logo({ className = '', size = 'medium' }) {
-  const [imageError, setImageError] = React.useState(false);
-
   const sizeClasses = {
     small: 'logo-small',
     medium: 'logo-medium',
@@ -17,16 +14,14 @@ function Logo({ className = '', size = 'medium' }) {
 
   return (
     <div className={`logo-wrapper ${sizeClasses[size]} ${className}`}>
-      {!imageError ? (
-        <img 
-          src={logoImage}
-          alt="SaveUp"
-          className="logo-image"
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        <div className="logo-fallback">
-          <span className="logo-fallback-text">SaveUp</span>
+      <div className="logo-badge" aria-hidden="true">
+        <span className="logo-mark">S</span>
+      </div>
+
+      {size !== 'small' && (
+        <div className="logo-text">
+          <span className="logo-text-main">Save</span>
+          <span className="logo-text-accent">Up</span>
         </div>
       )}
     </div>
