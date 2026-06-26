@@ -43,16 +43,16 @@ function Logo({ className = '', size = 'medium' }) {
         </text>
 
         <path
-          d="M76 16 L76 36"
+          d="M74 18 L74 34"
           stroke="#fff"
-          strokeWidth="4"
+          strokeWidth="3.5"
           strokeLinecap="round"
         />
         <path
-          d="M72 22 L76 16 L80 24"
+          d="M70 22 L74 18 L78 22"
           fill="none"
           stroke="#fff"
-          strokeWidth="4"
+          strokeWidth="3.5"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
