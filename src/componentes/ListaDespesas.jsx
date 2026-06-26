@@ -60,7 +60,6 @@ function ExpenseList({ userId, token, refreshTrigger }) {
             {expenses.map((expense) => (
               <li key={expense.id || expense._id} className="transaction-item expense">
                 <div className="trans-left">
-                  <div className="trans-icon">€</div>
                   <div className="trans-info">
                     <span className="trans-category">
                       {expense.categoria_nome || expense.categoria || 'Outras'}
