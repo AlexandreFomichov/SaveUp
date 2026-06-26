@@ -110,18 +110,7 @@ export let expensesService = {
 export let categoriesService = {
   getAll: async (token) => {
     try {
-      console.log('→ categoriesService.getAll - Requisição ao backend');
-      const response = await fetch(`${API_BASE_URL}/categorias`, {
-        method: 'GET',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error('Falha ao obter categorias');
-      const data = await response.json();
-      console.log('✔ Categorias retornadas:', data);
-      return data;
+      return await fetchWithAuth('/categorias', { method: 'GET' }, token);
     } catch (error) {
       console.error('✖ erro em categoriesService.getAll:', error);
       return [];
@@ -130,16 +119,10 @@ export let categoriesService = {
 
   create: async (category, token) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/categorias`, {
+      return await fetchWithAuth('/categorias', {
         method: 'POST',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
         body: JSON.stringify(category),
-      });
-      if (!response.ok) throw new Error('Falha ao criar categoria');
-      return await response.json();
+      }, token);
     } catch (error) {
       handleError(error);
     }
@@ -152,15 +135,7 @@ export let categoriesService = {
 export let incomeCategoriesService = {
   getAll: async (token) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/categorias_rendimentos`, {
-        method: 'GET',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error('Falha ao obter categorias de rendimentos');
-      return await response.json();
+      return await fetchWithAuth('/categorias_rendimentos', { method: 'GET' }, token);
     } catch (error) {
       console.error('Erro em incomeCategoriesService.getAll:', error);
       return [];
@@ -168,16 +143,10 @@ export let incomeCategoriesService = {
   },
   create: async (category, token) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/categorias_rendimentos`, {
+      return await fetchWithAuth('/categorias_rendimentos', {
         method: 'POST',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
         body: JSON.stringify(category),
-      });
-      if (!response.ok) throw new Error('Falha ao criar categoria de rendimento');
-      return await response.json();
+      }, token);
     } catch (error) {
       handleError(error);
     }
@@ -190,18 +159,7 @@ export let incomeCategoriesService = {
 export let budgetService = {
   getByMonth: async (userId, month, year, token) => {
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/orcamentos/${userId}?mes=${month}&ano=${year}`,
-        {
-          method: 'GET',
-          headers: {
-            ...defaultHeaders,
-            'Authorization': `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) throw new Error('Falha ao obter orçamento');
-      return await response.json();
+      return await fetchWithAuth(`/orcamentos/${userId}?mes=${month}&ano=${year}`, { method: 'GET' }, token);
     } catch (error) {
       handleError(error);
     }
@@ -209,16 +167,10 @@ export let budgetService = {
 
   create: async (userId, budget, token) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/orcamentos`, {
+      return await fetchWithAuth('/orcamentos', {
         method: 'POST',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
         body: JSON.stringify({ ...budget, utilizador_id: userId }),
-      });
-      if (!response.ok) throw new Error('Falha ao criar orçamento');
-      return await response.json();
+      }, token);
     } catch (error) {
       handleError(error);
     }
@@ -226,16 +178,10 @@ export let budgetService = {
 
   update: async (budgetId, budget, token) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/orcamentos/${budgetId}`, {
+      return await fetchWithAuth(`/orcamentos/${budgetId}`, {
         method: 'PUT',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
         body: JSON.stringify(budget),
-      });
-      if (!response.ok) throw new Error('Falha ao atualizar orçamento');
-      return await response.json();
+      }, token);
     } catch (error) {
       handleError(error);
     }
@@ -248,15 +194,7 @@ export let budgetService = {
 export let incomesService = {
   getAll: async (userId, token) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/rendimentos_extra/${userId}`, {
-        method: 'GET',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error('Falha ao obter receitas');
-      return await response.json();
+      return await fetchWithAuth(`/rendimentos_extra/${userId}`, { method: 'GET' }, token);
     } catch (error) {
       handleError(error);
     }
@@ -264,18 +202,11 @@ export let incomesService = {
 
   getByDateRange: async (userId, startDate, endDate, token) => {
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/rendimentos_extra/${userId}?startDate=${startDate}&endDate=${endDate}`,
-        {
-          method: 'GET',
-          headers: {
-            ...defaultHeaders,
-            'Authorization': `Bearer ${token}`,
-          },
-        }
+      return await fetchWithAuth(
+        `/rendimentos_extra/${userId}?startDate=${startDate}&endDate=${endDate}`,
+        { method: 'GET' },
+        token
       );
-      if (!response.ok) throw new Error('Falha ao obter receitas');
-      return await response.json();
     } catch (error) {
       handleError(error);
     }
@@ -283,16 +214,10 @@ export let incomesService = {
 
   create: async (userId, income, token) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/rendimentos_extra`, {
+      return await fetchWithAuth('/rendimentos_extra', {
         method: 'POST',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
         body: JSON.stringify({ ...income, utilizador_id: userId }),
-      });
-      if (!response.ok) throw new Error('Falha ao criar rendimento');
-      return await response.json();
+      }, token);
     } catch (error) {
       handleError(error);
     }
@@ -300,16 +225,10 @@ export let incomesService = {
 
   update: async (incomeId, income, token) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/rendimentos_extra/${incomeId}`, {
+      return await fetchWithAuth(`/rendimentos_extra/${incomeId}`, {
         method: 'PUT',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
         body: JSON.stringify(income),
-      });
-      if (!response.ok) throw new Error('Falha ao atualizar rendimento');
-      return await response.json();
+      }, token);
     } catch (error) {
       handleError(error);
     }
@@ -317,15 +236,7 @@ export let incomesService = {
 
   delete: async (incomeId, token) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/rendimentos_extra/${incomeId}`, {
-        method: 'DELETE',
-        headers: {
-          ...defaultHeaders,
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (!response.ok) throw new Error('Falha ao eliminar rendimento');
-      return await response.json();
+      return await fetchWithAuth(`/rendimentos_extra/${incomeId}`, { method: 'DELETE' }, token);
     } catch (error) {
       handleError(error);
     }
