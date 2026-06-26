@@ -100,7 +100,7 @@ function Navigation({ user, onLogout }) {
                   <NavLink
                     key={tab.path}
                     to={tab.path}
-                    className="pages-dropdown-item"
+                    className={({ isActive }) => `pages-dropdown-item${isActive ? ' active' : ''}`}
                     onClick={() => setShowPagesMenu(false)}
                   >
                     <span className="dropdown-icon">{tab.icon}</span>
