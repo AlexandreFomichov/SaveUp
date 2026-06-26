@@ -33,19 +33,7 @@ function ExpenseList({ userId, token, refreshTrigger }) {
     }
   }, [userId, token, refreshTrigger, loadExpenses]);
 
-  // Função para eliminar despesa
-  const deleteExpense = async (expenseId) => {
-    if (window.confirm('Tem a certeza que deseja eliminar esta despesa?')) {
-      try {
-        setError(null);
-        await expensesService.delete(expenseId, token);
-        await loadExpenses();
-      } catch (err) {
-        setError('Erro ao eliminar despesa');
-        console.error(err);
-      }
-    }
-  };
+  // (Removida a função de eliminar para ocultar o botão na UI)
 
   if (loading) {
     return <div className="expense-list-container"><p>Carregando despesas...</p></div>;
@@ -87,9 +75,7 @@ function ExpenseList({ userId, token, refreshTrigger }) {
                     <span className="trans-date">{formatDate(expense.data)}</span>
                   </div>
 
-                  <div className="action-buttons">
-                    <button type="button" className="btn-icon btn-delete" onClick={() => deleteExpense(expense.id || expense._id)}>Eliminar</button>
-                  </div>
+                  {/* botão de eliminar removido */}
                 </div>
               </li>
             ))}
