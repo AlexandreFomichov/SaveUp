@@ -537,6 +537,19 @@
   width: 100%;
 }
 
+.budget-category-placeholder {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.category-placeholder-text {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 .category-chart-meta {
   display: flex;
   justify-content: space-between;
