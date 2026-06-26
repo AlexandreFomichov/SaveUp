@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './PopupNotificacao.css';
 
 export default function PopupNotificacao({
@@ -9,7 +9,32 @@ export default function PopupNotificacao({
   onClose,
   actionLabel,
   onAction,
+  autoCloseDuration = null, // null = permanent, number = milliseconds before auto-close
 }) {
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    if (!visible || !autoCloseDuration) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      return;
+    }
+
+    // Set auto-close timeout
+    timeoutRef.current = setTimeout(() => {
+      onClose();
+    }, autoCloseDuration);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, [visible, autoCloseDuration, onClose]);
+
   if (!visible) return null;
 
   const icon = type === 'error' ? '!' : '✓';

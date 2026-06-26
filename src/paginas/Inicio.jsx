@@ -279,7 +279,7 @@ function InsightsSection({ expensesLength, avgExpenseValue, monthlyBudget, perce
 export default function Home({ userId, token, refreshKey = 0 }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const popupTimerRef = useRef(null);
+  const budgetPromptShownRef = useRef(false);
 
   const [refreshKeyLocal, setRefreshKeyLocal] = useState(0);
   const [popup, setPopup] = useState({
@@ -289,6 +289,7 @@ export default function Home({ userId, token, refreshKey = 0 }) {
     type: 'success',
     actionLabel: '',
     onAction: null,
+    autoCloseDuration: null,
   });
   const [incomeCategories, setIncomeCategories] = useState([]);
 
@@ -310,7 +311,7 @@ export default function Home({ userId, token, refreshKey = 0 }) {
     loadIncomeCategories();
   }, [token]);
 
-  const showPopup = useCallback((title, message, type = 'success', actionLabel = '', onAction = null) => {
+  const showPopup = useCallback((title, message, type = 'success', actionLabel = '', onAction = null, autoCloseDuration = null) => {
     setPopup({
       visible: true,
       title,
@@ -318,8 +319,14 @@ export default function Home({ userId, token, refreshKey = 0 }) {
       type,
       actionLabel,
       onAction,
+      autoCloseDuration,
     });
   }, []);
+
+  // Wrapper para popups de despesa/receita que desaparecem em 3 segundos
+  const showPopupWithAutoClose = useCallback((title, message, type = 'success') => {
+    showPopup(title, message, type, '', null, 3000);
+  }, [showPopup]);
 
   const hidePopup = useCallback(() => {
     setPopup((prev) => ({ ...prev, visible: false }));
@@ -333,26 +340,36 @@ export default function Home({ userId, token, refreshKey = 0 }) {
   }, [hidePopup, popup]);
 
   useEffect(() => {
+    if (budgetPromptShownRef.current) return;
+
     const showBudgetPrompt =
       location.state?.showBudgetPopup === true ||
       localStorage.getItem('pendingBudgetSetup') === 'true';
 
     if (!showBudgetPrompt) return;
 
+    budgetPromptShownRef.current = true;
     localStorage.removeItem('pendingBudgetSetup');
 
-    showPopup(
-      'Defina o seu orçamento',
-      'Clique no botão abaixo para configurar o seu orçamento mensal e começar a controlar as suas finanças.',
-      'success',
-      'Ir para Orçamento',
-      () => navigate('/orcamento')
-    );
+    // Schedule popup on next tick to avoid cascading renders warning
+    const timer = setTimeout(() => {
+      setPopup({
+        visible: true,
+        title: 'Defina o seu orçamento',
+        message: 'Clique no botão abaixo para configurar o seu orçamento mensal e começar a controlar as suas finanças.',
+        type: 'success',
+        actionLabel: 'Ir para Orçamento',
+        onAction: () => navigate('/orcamento'),
+        autoCloseDuration: null,
+      });
+    }, 0);
 
     if (location.state?.showBudgetPopup) {
       navigate(location.pathname, { replace: true, state: null });
     }
-  }, [location.pathname, location.state, navigate, showPopup]);
+
+    return () => clearTimeout(timer);
+  }, [location.pathname, location.state, navigate]);
 
   useDataSync('budget-updated', handleRefresh);
   const { notifyUpdate: notifyExpenseUpdate } = useDataSync('expenses-updated', handleRefresh);
@@ -427,6 +444,7 @@ export default function Home({ userId, token, refreshKey = 0 }) {
         onClose={hidePopup}
         actionLabel={popup.actionLabel}
         onAction={handlePopupAction}
+        autoCloseDuration={popup.autoCloseDuration}
       />
 
       <div className="section-title">
@@ -453,7 +471,7 @@ export default function Home({ userId, token, refreshKey = 0 }) {
         token={token}
         onExpenseCreated={handleExpenseCreated}
         onIncomeCreated={handleIncomeCreated}
-        onNotification={showPopup}
+        onNotification={showPopupWithAutoClose}
       />
 
       <TransactionsSection recentExpenses={recentExpenses} recentIncomes={enrichedRecentIncomes} />

@@ -12,9 +12,6 @@ function ExpensesPage({ userId, token, refreshTrigger, onExpenseCreated }) {
 
   const showPopup = useCallback((title, message, type = 'success') => {
     setPopup({ visible: true, title, message, type });
-    window.setTimeout(() => {
-      setPopup((prev) => (prev.visible ? { ...prev, visible: false } : prev));
-    }, 3000);
   }, []);
 
   const hidePopup = useCallback(() => {
@@ -36,6 +33,7 @@ function ExpensesPage({ userId, token, refreshTrigger, onExpenseCreated }) {
         message={popup.message}
         type={popup.type}
         onClose={hidePopup}
+        autoCloseDuration={3000}
       />
 
       <div className="section-title">
