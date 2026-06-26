@@ -1,16 +1,92 @@
-# React + Vite
+# SaveUp - Gestão de Despesas Pessoais
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação web para gestão e controlo de despesas, orçamento e depósitos pessoais.
 
-Currently, two official plugins are available:
+## 🚀 Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Autenticação**: Login e registo de utilizadores com encriptação de passwords
+- **Dashboard**: Visão geral do saldo e despesas
+- **Gestão de Despesas**: Adicionar, visualizar e categorizar despesas
+- **Orçamento**: Definir e monitorizar orçamento mensal com barras de progresso
+- **Simulador de Depósitos**: Simular crescimento de poupanças
+- **Sincronização em Tempo Real**: Atualização automática de dados entre abas
 
-## React Compiler
+## 🛠️ Stack Tecnológico
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Frontend:**
+- React 19
+- Vite (build tool)
+- React Router DOM (routing)
+- CSS3 (estilos)
 
-## Expanding the ESLint configuration
+**Backend:**
+- Node.js + Express
+- MySQL 2
+- JWT (autenticação)
+- bcryptjs (encriptação)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📋 Instalação
+
+```bash
+# Instalar dependências
+npm install
+
+# Variáveis de ambiente
+# Criar ficheiro .env com:
+DB_HOST=seu_host
+DB_PORT=3306
+DB_USER=seu_utilizador
+DB_NAME=saveup
+DB_PASSWORD=sua_password
+JWT_SECRET=sua_chave_secreta
+PORT=3000
+FRONTEND_URL=http://localhost:5173
+```
+
+## 🏃 Execução
+
+```bash
+# Desenvolvimento (Frontend + Backend simultaneamente)
+npm run dev:all
+
+# Apenas Frontend
+npm run dev
+
+# Apenas Backend
+npm run server
+
+# Build para produção
+npm run build
+
+# Produção
+npm start
+```
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── componentes/      # Componentes reutilizáveis (CartaoSaldo, PopupNotificacao, etc.)
+├── paginas/         # Páginas principais (Login, Dashboard, Despesas, etc.)
+├── context/         # React Context (Autenticação)
+├── ganchos/         # Custom Hooks (useDashboardData, useSincronizacaoDados)
+├── servicos/        # Serviços de API e mock de dados
+├── utilitarios/     # Funções utilitárias (formatadores)
+├── configuracao/    # Configurações da aplicação
+└── routes/          # Proteção de rotas autenticadas
+```
+
+## 🌐 Deployment
+
+A aplicação está deployed no Railway com:
+- Frontend em produção
+- Backend (Node.js) com base de dados MySQL
+- Variáveis de ambiente configuradas
+
+## 📝 Notas
+
+- A aplicação utiliza autenticação JWT para segurança
+- Sincronização em tempo real entre abas via WebSocket
+- Base de dados MySQL em ambiente Railway
+
+## 👨‍💻 Desenvolvido em 2026
