@@ -217,11 +217,6 @@ function TransactionsSection({ recentExpenses, recentIncomes }) {
                   key={expense.id ?? expense._id ?? `expense-${index}`}
                   className="transaction-item expense"
                 >
-                  <div className="trans-icon-wrapper">
-                    <div className="trans-icon">
-                      {getIconForCategory(expense.categoria_nome || expense.categoria || 'Outras')}
-                    </div>
-                  </div>
                   <div className="trans-info">
                     <span className="trans-category">
                       {expense.categoria_nome || expense.categoria || 'Outras'}
@@ -252,11 +247,6 @@ function TransactionsSection({ recentExpenses, recentIncomes }) {
                   key={income.id ?? income._id ?? `income-${index}`}
                   className="transaction-item income"
                 >
-                  <div className="trans-icon-wrapper">
-                    <div className="trans-icon">
-                      {getIconForCategory(income.categoria_nome || 'Categoria')}
-                    </div>
-                  </div>
                   <div className="trans-info">
                     <span className="trans-category">
                       {income.categoria_nome || 'Categoria'}
