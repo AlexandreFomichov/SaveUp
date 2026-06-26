@@ -25,6 +25,10 @@ export async function fetchWithAuth(endpoint, options = {}, token) {
     headers.Authorization = `Bearer ${normalizedToken}`;
   }
 
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('fetchWithAuth: endpoint=', endpoint, 'Authorization=', headers.Authorization);
+  }
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,

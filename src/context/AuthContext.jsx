@@ -16,7 +16,8 @@ const getStoredUser = () => {
 
 const getStoredToken = () => {
   try {
-    return localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
+    return token ? token.trim() : null;
   } catch (error) {
     console.warn('Falha ao ler token do localStorage:', error);
     return null;
@@ -39,11 +40,12 @@ export function AuthProvider({ children }) {
   }, [user, token]);
 
   const login = useCallback((userData, tokenData) => {
+    const normalizedToken = typeof tokenData === 'string' ? tokenData.trim() : tokenData;
     setUser(userData);
-    setToken(tokenData);
+    setToken(normalizedToken);
     try {
       localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('authToken', tokenData);
+      localStorage.setItem('authToken', normalizedToken);
     } catch (error) {
       console.warn('Falha ao gravar autenticação no localStorage:', error);
     }
