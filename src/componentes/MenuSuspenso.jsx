@@ -16,17 +16,25 @@ export default function DropdownMenu() {
 
   useEffect(() => {
     if (!open) return;
-    // calcular posição do botão e fixar o dropdown na esquerda da página
     const btn = ref.current?.querySelector('.drop-btn');
     if (!btn) return;
-    const rect = btn.getBoundingClientRect();
-    const left = 12; // distância da esquerda da página em px
-    const top = rect.bottom + 8; // 8px abaixo do botão
-    setMenuStyle({ left: `${left}px`, top: `${top}px` });
+
+    const updatePosition = () => {
+      const rect = btn.getBoundingClientRect();
+      const isMobile = window.innerWidth <= 768;
+      const top = rect.bottom + 8;
+
+      setMenuStyle({
+        left: isMobile ? '50%' : '12px',
+        top: `${top}px`,
+        transform: isMobile ? 'translateX(-50%)' : 'none',
+      });
+    };
+
+    updatePosition();
 
     function onResize() {
-      const r = btn.getBoundingClientRect();
-      setMenuStyle({ left: `${left}px`, top: `${r.bottom + 8}px` });
+      updatePosition();
     }
 
     window.addEventListener('resize', onResize);
