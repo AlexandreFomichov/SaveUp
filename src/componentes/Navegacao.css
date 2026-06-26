@@ -38,7 +38,7 @@
 }
 
 ..nav-logo {
-  --topbar-logo-button-size: 54px;
+  --topbar-logo-button-size: 60px;
   --topbar-action-button-size: 42px;
   display: inline-flex;
   align-items: center;
