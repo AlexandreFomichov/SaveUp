@@ -295,6 +295,7 @@
   display: none;
   align-items: center;
   flex: 1;
+  justify-content: flex-end;
 }
 
 /* Desktop Only - Hide Mobile Elements */
@@ -331,7 +332,8 @@
 .pages-dropdown {
   position: absolute;
   top: calc(100% + 12px);
-  left: 0;
+  right: 0;
+  left: auto;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.99) 0%, rgba(245, 240, 232, 0.97) 100%);
   backdrop-filter: blur(16px);
   border-radius: var(--border-radius-lg);

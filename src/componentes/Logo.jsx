@@ -31,7 +31,7 @@ function Logo({ className = '', size = 'medium' }) {
         <circle cx="50" cy="50" r="46" fill="url(#saveupGradient)" />
 
         <text
-          x="30"
+          x="50"
           y="62"
           textAnchor="middle"
           fontFamily="Inter, Arial, sans-serif"
@@ -43,13 +43,13 @@ function Logo({ className = '', size = 'medium' }) {
         </text>
 
         <path
-          d="M78 18 L78 32"
+          d="M74 18 L74 30"
           stroke="#fff"
           strokeWidth="4"
           strokeLinecap="round"
         />
         <path
-          d="M74 24 L78 18 L82 24"
+          d="M70 24 L74 18 L78 24"
           fill="none"
           stroke="#fff"
           strokeWidth="4"
