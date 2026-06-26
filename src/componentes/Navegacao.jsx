@@ -65,7 +65,7 @@ function Navigation({ user, onLogout }) {
     <nav className="navigation" aria-label="Menu principal">
       <div className="nav-container">
         <NavLink to="/" className="nav-logo" aria-label="Voltar ao início">
-          <Logo />
+          <Logo size="small" />
         </NavLink>
 
         <div className="nav-tabs">
