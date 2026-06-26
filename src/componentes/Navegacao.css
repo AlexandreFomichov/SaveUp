@@ -464,9 +464,9 @@
   .pages-menu-wrapper {
     display: flex;
     position: absolute;
-    left: 50%;
+    right: 92px;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     justify-content: center;
     z-index: 5;
   }
