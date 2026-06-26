@@ -81,7 +81,12 @@ export default function LoginPage() {
           formData.email,
           formData.password
         );
-        setSuccess('Conta criada com sucesso! Por favor, faça login.');
+        try {
+          localStorage.setItem('pendingBudgetSetup', 'true');
+        } catch (storageError) {
+          console.warn('Falha ao gravar flag de configuração de orçamento:', storageError);
+        }
+        setSuccess('Conta criada com sucesso! Faça login para definir o orçamento.');
         setFormData({
           email: '',
           password: '',

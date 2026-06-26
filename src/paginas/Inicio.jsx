@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ProgressBar from '../componentes/BarraProgresso';
 import DropdownMenu from '../componentes/MenuSuspenso';
 import ExpenseForm from '../componentes/FormularioDespesa';
@@ -264,8 +265,19 @@ function InsightsSection({ expensesLength, avgExpenseValue, monthlyBudget, perce
 }
 
 export default function Home({ userId, token, refreshKey = 0 }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const popupTimerRef = useRef(null);
+
   const [refreshKeyLocal, setRefreshKeyLocal] = useState(0);
-  const [popup, setPopup] = useState({ visible: false, title: '', message: '', type: 'success' });
+  const [popup, setPopup] = useState({
+    visible: false,
+    title: '',
+    message: '',
+    type: 'success',
+    actionLabel: '',
+    onAction: null,
+  });
   const [incomeCategories, setIncomeCategories] = useState([]);
 
   const handleRefresh = useCallback(() => {
@@ -286,16 +298,60 @@ export default function Home({ userId, token, refreshKey = 0 }) {
     loadIncomeCategories();
   }, [token]);
 
-  const showPopup = useCallback((title, message, type = 'success') => {
-    setPopup({ visible: true, title, message, type });
-    window.setTimeout(() => {
+  const showPopup = useCallback((title, message, type = 'success', actionLabel = '', onAction = null) => {
+    if (popupTimerRef.current) {
+      window.clearTimeout(popupTimerRef.current);
+    }
+
+    setPopup({
+      visible: true,
+      title,
+      message,
+      type,
+      actionLabel,
+      onAction,
+    });
+
+    popupTimerRef.current = window.setTimeout(() => {
       setPopup((prev) => (prev.visible ? { ...prev, visible: false } : prev));
-    }, 3000);
+    }, 4000);
   }, []);
 
   const hidePopup = useCallback(() => {
+    if (popupTimerRef.current) {
+      window.clearTimeout(popupTimerRef.current);
+    }
     setPopup((prev) => ({ ...prev, visible: false }));
   }, []);
+
+  const handlePopupAction = useCallback(() => {
+    if (popup.onAction) {
+      popup.onAction();
+    }
+    hidePopup();
+  }, [hidePopup, popup]);
+
+  useEffect(() => {
+    const showBudgetPrompt =
+      location.state?.showBudgetPopup === true ||
+      localStorage.getItem('pendingBudgetSetup') === 'true';
+
+    if (!showBudgetPrompt) return;
+
+    localStorage.removeItem('pendingBudgetSetup');
+
+    showPopup(
+      'Defina o seu orçamento',
+      'Clique no botão abaixo para configurar o seu orçamento mensal e começar a controlar as suas finanças.',
+      'success',
+      'Ir para Orçamento',
+      () => navigate('/orcamento')
+    );
+
+    if (location.state?.showBudgetPopup) {
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.pathname, location.state, navigate, showPopup]);
 
   useDataSync('budget-updated', handleRefresh);
   const { notifyUpdate: notifyExpenseUpdate } = useDataSync('expenses-updated', handleRefresh);
@@ -368,6 +424,8 @@ export default function Home({ userId, token, refreshKey = 0 }) {
         message={popup.message}
         type={popup.type}
         onClose={hidePopup}
+        actionLabel={popup.actionLabel}
+        onAction={handlePopupAction}
       />
 
       <div className="section-title">

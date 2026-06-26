@@ -1,7 +1,15 @@
 import React from 'react';
 import './PopupNotificacao.css';
 
-export default function PopupNotificacao({ visible, title, message, type = 'success', onClose }) {
+export default function PopupNotificacao({
+  visible,
+  title,
+  message,
+  type = 'success',
+  onClose,
+  actionLabel,
+  onAction,
+}) {
   if (!visible) return null;
 
   const icon = type === 'error' ? '!' : '✓';
@@ -15,6 +23,13 @@ export default function PopupNotificacao({ visible, title, message, type = 'succ
           <div className="popup-content">
             <h3>{title}</h3>
             <p>{message}</p>
+            {actionLabel && onAction && (
+              <div className="popup-actions">
+                <button type="button" className="popup-action-btn" onClick={onAction}>
+                  {actionLabel}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
