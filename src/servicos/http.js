@@ -20,8 +20,9 @@ export async function fetchWithAuth(endpoint, options = {}, token) {
     ...(options.headers || {}),
   };
 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  const normalizedToken = typeof token === 'string' ? token.trim() : '';
+  if (normalizedToken && normalizedToken !== 'undefined' && normalizedToken !== 'null') {
+    headers.Authorization = `Bearer ${normalizedToken}`;
   }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {

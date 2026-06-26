@@ -228,12 +228,20 @@ const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('🔐 authenticateToken authHeader:', authHeader);
+    console.log('🔐 authenticateToken token:', token ? `${token.substring(0, 20)}...` : token);
+  }
+
   if (!token) {
     return res.status(401).json({ error: true, message: 'Token não fornecido' });
   }
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('🔐 authenticateToken error:', err.message);
+      }
       return res.status(401).json({ error: true, message: 'Token inválido' });
     }
     req.user = user;
