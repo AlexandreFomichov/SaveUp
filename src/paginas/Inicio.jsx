@@ -299,10 +299,6 @@ export default function Home({ userId, token, refreshKey = 0 }) {
   }, [token]);
 
   const showPopup = useCallback((title, message, type = 'success', actionLabel = '', onAction = null) => {
-    if (popupTimerRef.current) {
-      window.clearTimeout(popupTimerRef.current);
-    }
-
     setPopup({
       visible: true,
       title,
@@ -311,16 +307,9 @@ export default function Home({ userId, token, refreshKey = 0 }) {
       actionLabel,
       onAction,
     });
-
-    popupTimerRef.current = window.setTimeout(() => {
-      setPopup((prev) => (prev.visible ? { ...prev, visible: false } : prev));
-    }, 4000);
   }, []);
 
   const hidePopup = useCallback(() => {
-    if (popupTimerRef.current) {
-      window.clearTimeout(popupTimerRef.current);
-    }
     setPopup((prev) => ({ ...prev, visible: false }));
   }, []);
 
