@@ -41,6 +41,13 @@
 
 .expenses-form-section .form-module {
   margin: 0;
+  /* Aplicar visual de cartão com detalhe verde igual à página inicial */
+  background: var(--color-white);
+  border: 1px solid var(--color-surface-dark);
+  border-left: 4px solid var(--color-green-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 18px 40px rgba(26, 26, 26, 0.06);
+  padding: 1.25rem;
 }
 
 .expenses-form-section .form-header h3 {
