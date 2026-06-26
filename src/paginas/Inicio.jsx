@@ -11,6 +11,29 @@ import { incomeCategoriesService } from '../servicos/api';
 import { formatCurrency, formatDate } from '../utilitarios/formatadores';
 import './Inicio.css';
 
+// Mapa de categorias para ícones/símbolos simples e finos
+const CATEGORY_ICONS = {
+  // Despesas
+  'Alimentação': '◉',    // Círculo preenchido = prato
+  'Transporte': '→',     // Seta = movimento/deslocação
+  'Saúde': '+',          // Cruz = médico/farmácia
+  'Educação': '▢',       // Quadrado = instituição/estrutura
+  'Entretenimento': '◇', // Diamante vazio = diversão/especial
+  'Moradia': '⌂',        // Casa = casa
+  'Outros': '•',         // Ponto = genérico
+  
+  // Rendimentos
+  'Freelance': '∞',      // Infinito = trabalho contínuo
+  'Bónus': '▲',          // Triângulo para cima = crescimento/ganho
+  'Vendas de Artigos': '◆', // Diamante preenchido = valor/mercadoria
+  'Outros': '•',         // Ponto = genérico
+};
+
+const getIconForCategory = (categoryName) => {
+  if (!categoryName) return '○';
+  return CATEGORY_ICONS[categoryName] || CATEGORY_ICONS['Outros'];
+};
+
 function BudgetOverview({ monthlyBudget, totalSpent, totalIncomes, available, percent, isOverBudget, topCategory, topIncome, expenseTrend }) {
   const [mode, setMode] = useState('expense'); // 'expense' or 'income'
   const [animating, setAnimating] = useState(false);
@@ -183,7 +206,10 @@ function TransactionsSection({ recentExpenses, recentIncomes }) {
     <section className="home-section home-transactions">
       <div className="transactions-grid">
         <div className="card transactions-card">
-          <h3>Despesas Recentes</h3>
+          <div className="transactions-header">
+            <h3>Despesas Recentes</h3>
+            <span className="card-count">{recentExpenses.length}</span>
+          </div>
           <ul className="transactions-list">
             {recentExpenses.length > 0 ? (
               recentExpenses.map((expense, index) => (
@@ -191,14 +217,16 @@ function TransactionsSection({ recentExpenses, recentIncomes }) {
                   key={expense.id ?? expense._id ?? `expense-${index}`}
                   className="transaction-item expense"
                 >
-                  <div className="trans-left">
-                    <div className="trans-icon"></div>
-                    <div className="trans-info">
-                      <span className="trans-category">
-                        {expense.categoria_nome || expense.categoria || 'Outras'}
-                      </span>
-                      <span className="trans-desc">{expense.descricao || 'Sem descrição'}</span>
+                  <div className="trans-icon-wrapper">
+                    <div className="trans-icon">
+                      {getIconForCategory(expense.categoria_nome || expense.categoria || 'Outras')}
                     </div>
+                  </div>
+                  <div className="trans-info">
+                    <span className="trans-category">
+                      {expense.categoria_nome || expense.categoria || 'Outras'}
+                    </span>
+                    <span className="trans-desc">{expense.descricao || 'Sem descrição'}</span>
                   </div>
                   <div className="trans-right">
                     <span className="trans-value">-{formatCurrency(Number(expense.valor) || 0)}</span>
@@ -213,7 +241,10 @@ function TransactionsSection({ recentExpenses, recentIncomes }) {
         </div>
 
         <div className="card transactions-card">
-          <h3>Últimos Rendimentos Extra</h3>
+          <div className="transactions-header">
+            <h3>Últimos Rendimentos Extra</h3>
+            <span className="card-count">{recentIncomes.length}</span>
+          </div>
           <ul className="transactions-list">
             {recentIncomes.length > 0 ? (
               recentIncomes.map((income, index) => (
@@ -221,14 +252,16 @@ function TransactionsSection({ recentExpenses, recentIncomes }) {
                   key={income.id ?? income._id ?? `income-${index}`}
                   className="transaction-item income"
                 >
-                  <div className="trans-left">
-                    <div className="trans-icon"></div>
-                    <div className="trans-info">
-                      <span className="trans-category">
-                        {income.categoria_nome || 'Categoria'}
-                      </span>
-                      <span className="trans-desc">{income.origem || 'Sem origem'}</span>
+                  <div className="trans-icon-wrapper">
+                    <div className="trans-icon">
+                      {getIconForCategory(income.categoria_nome || 'Categoria')}
                     </div>
+                  </div>
+                  <div className="trans-info">
+                    <span className="trans-category">
+                      {income.categoria_nome || 'Categoria'}
+                    </span>
+                    <span className="trans-desc">{income.origem || 'Sem origem'}</span>
                   </div>
                   <div className="trans-right">
                     <span className="trans-value positive">+{formatCurrency(Number(income.valor) || 0)}</span>
