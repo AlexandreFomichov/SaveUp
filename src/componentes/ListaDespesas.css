@@ -149,8 +149,10 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.transaction-item.expense .trans-value {
+.transactions-list .transaction-item.expense .trans-value {
   color: var(--color-error);
+  font-size: 1.12rem;
+  line-height: 1;
 }
 
 .transaction-item.income .trans-value {
