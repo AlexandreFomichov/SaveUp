@@ -81,7 +81,7 @@ function BudgetProgress({ totalExpenses, remaining, percentage, isOverBudget }) 
         </div>
         <div className="progress-stat">
           <span className="stat-label">Gasto</span>
-          <span className={`stat-value ${isOverBudget ? 'over' : ''}`}>
+          <span className="stat-value spent">
             {formatCurrency(totalExpenses)}
           </span>
         </div>

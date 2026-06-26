@@ -125,6 +125,10 @@
   font-weight: 700;
 }
 
+.stat-value.spent {
+  color: var(--color-red-primary);
+}
+
 .stat-value.over {
   color: var(--color-error);
 }
