@@ -37,7 +37,7 @@
   order: 10;
 }
 
-..nav-logo {
+.nav-logo {
   --topbar-logo-button-size: 60px;
   --topbar-action-button-size: 42px;
   display: inline-flex;
