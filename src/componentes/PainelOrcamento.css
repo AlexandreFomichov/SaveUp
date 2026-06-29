@@ -137,6 +137,10 @@
   color: var(--color-green-primary);
 }
 
+.stat-value.extra-income {
+  color: var(--color-blue-primary);
+}
+
 .progress-bar-container {
   background-color: rgba(56, 178, 172, 0.08);
   border-radius: 1rem;

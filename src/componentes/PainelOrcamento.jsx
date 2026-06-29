@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { budgetService, expensesService } from '../servicos/api';
+import { budgetService, expensesService, incomesService } from '../servicos/api';
 import { formatCurrency, formatMonthYear } from '../utilitarios/formatadores';
 import ProgressBar from './BarraProgresso';
 import './PainelOrcamento.css';
@@ -67,7 +67,7 @@ function BudgetActions({ budgetAmount, isEditing, editValue, onEdit, onChange, o
   );
 }
 
-function BudgetProgress({ totalExpenses, remaining, percentage, isOverBudget }) {
+function BudgetProgress({ totalExpenses, remaining, percentage, isOverBudget, extraIncome = 0 }) {
   const displayPercent = Math.round(percentage);
 
   return (
@@ -85,6 +85,14 @@ function BudgetProgress({ totalExpenses, remaining, percentage, isOverBudget }) 
             {formatCurrency(totalExpenses)}
           </span>
         </div>
+        {extraIncome > 0 && (
+          <div className="progress-stat">
+            <span className="stat-label">Rendimento Extra</span>
+            <span className="stat-value extra-income">
+              +{formatCurrency(extraIncome)}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="progress-panel">
@@ -106,6 +114,7 @@ function BudgetProgress({ totalExpenses, remaining, percentage, isOverBudget }) 
 function BudgetPanel({ userId, token, onBudgetUpdated }) {
   const [budget, setBudget] = useState(null);
   const [expenses, setExpenses] = useState([]);
+  const [incomes, setIncomes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -136,11 +145,16 @@ function BudgetPanel({ userId, token, onBudgetUpdated }) {
         const { startDate, endDate } = getMonthRange(currentYear, currentMonth);
         const expensesData = await expensesService.getByDateRange(userId, startDate, endDate, token);
         setExpenses(Array.isArray(expensesData) ? expensesData : []);
+
+        // Buscar rendimentos extras do mês atual
+        const incomesData = await incomesService.getByDateRange(userId, startDate, endDate, token);
+        setIncomes(Array.isArray(incomesData) ? incomesData : []);
       } catch (err) {
         console.error(err);
         setError(null);
         setBudget(null);
         setExpenses([]);
+        setIncomes([]);
       } finally {
         setLoading(false);
       }
@@ -152,9 +166,11 @@ function BudgetPanel({ userId, token, onBudgetUpdated }) {
   }, [userId, token, currentMonth, currentYear]);
 
   const totalExpenses = expenses.reduce((sum, expense) => sum + Number(expense.valor || 0), 0);
+  const totalExtraIncome = incomes.reduce((sum, income) => sum + Number(income.valor || 0), 0);
   const budgetAmount = Number(budget?.valor_mensal || 0);
-  const remaining = budgetAmount - totalExpenses;
-  const percentage = budgetAmount > 0 ? (totalExpenses / budgetAmount) * 100 : 0;
+  const budgetWithExtraIncome = budgetAmount + totalExtraIncome;
+  const remaining = budgetWithExtraIncome - totalExpenses;
+  const percentage = budgetWithExtraIncome > 0 ? (totalExpenses / budgetWithExtraIncome) * 100 : 0;
   const isOverBudget = remaining < 0;
 
   const handleSaveBudget = async () => {
@@ -216,12 +232,13 @@ function BudgetPanel({ userId, token, onBudgetUpdated }) {
         onSave={handleSaveBudget}
         onCancel={() => setIsEditing(false)}
       />
-      {budgetAmount > 0 && (
+      {budgetWithExtraIncome > 0 && (
         <BudgetProgress
           totalExpenses={totalExpenses}
           remaining={remaining}
           percentage={percentage}
           isOverBudget={isOverBudget}
+          extraIncome={totalExtraIncome}
         />
       )}
     </div>
