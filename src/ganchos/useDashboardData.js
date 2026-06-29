@@ -163,8 +163,8 @@ export default function useDashboardData(userId, token, refreshKey = 0) {
     topCategory,
     expenseTrend,
     incomeTrend,
-    recentExpenses: sortedRecentExpenses.slice(0, 3).reverse(),
-    recentIncomes: sortedRecentIncomes.slice(0, 3).reverse(),
+    recentExpenses: sortedRecentExpenses.slice(0, 3),
+    recentIncomes: sortedRecentIncomes.slice(0, 3),
     refreshDashboard: loadDashboard,
   };
 }
