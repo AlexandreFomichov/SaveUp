@@ -441,7 +441,8 @@ export default function Home({ userId, token, refreshKey = 0 }) {
 
   const topIncome = getTopIncome(enrichedIncomes);
 
-  const enrichedRecentIncomes = enrichIncomes(recentIncomes);
+  const enrichedRecentIncomes = enrichIncomes(recentIncomes).slice(0, 3);
+  const displayedRecentExpenses = recentExpenses.slice(0, 3);
 
   const handleExpenseCreated = useCallback(() => {
     handleRefresh();
@@ -497,7 +498,7 @@ export default function Home({ userId, token, refreshKey = 0 }) {
         onNotification={showPopupWithAutoClose}
       />
 
-      <TransactionsSection recentExpenses={recentExpenses} recentIncomes={enrichedRecentIncomes} />
+      <TransactionsSection recentExpenses={displayedRecentExpenses} recentIncomes={enrichedRecentIncomes} />
 
       <InsightsSection
         expensesLength={expenses.length}

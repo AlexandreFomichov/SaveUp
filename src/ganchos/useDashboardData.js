@@ -74,6 +74,17 @@ const getLastDaysTotals = (entries, days = 7) => {
 
 const safeArray = (data) => (Array.isArray(data) ? data : []);
 
+const getLatestEntries = (entries, limit = 3) => {
+  return [...safeArray(entries)]
+    .filter((entry) => entry?.data)
+    .sort((a, b) => {
+      const dateA = new Date(a.data).getTime();
+      const dateB = new Date(b.data).getTime();
+      return (Number.isNaN(dateB) ? 0 : dateB) - (Number.isNaN(dateA) ? 0 : dateA);
+    })
+    .slice(0, limit);
+};
+
 export default function useDashboardData(userId, token, refreshKey = 0) {
   const [loading, setLoading] = useState(true);
   const [expenses, setExpenses] = useState([]);
@@ -141,8 +152,8 @@ export default function useDashboardData(userId, token, refreshKey = 0) {
   const expenseTrend = getLastDaysTotals(expenses, 7);
   const incomeTrend = getLastDaysTotals(incomes, 7);
 
-  const sortedRecentExpenses = [...allExpenses].sort((a, b) => new Date(b.data) - new Date(a.data));
-  const sortedRecentIncomes = [...allIncomes].sort((a, b) => new Date(b.data) - new Date(a.data));
+  const recentExpenses = getLatestEntries(allExpenses, 3);
+  const recentIncomes = getLatestEntries(allIncomes, 3);
 
   return {
     loading,
@@ -163,8 +174,8 @@ export default function useDashboardData(userId, token, refreshKey = 0) {
     topCategory,
     expenseTrend,
     incomeTrend,
-    recentExpenses: sortedRecentExpenses.slice(0, 3),
-    recentIncomes: sortedRecentIncomes.slice(0, 3),
+    recentExpenses,
+    recentIncomes,
     refreshDashboard: loadDashboard,
   };
 }
