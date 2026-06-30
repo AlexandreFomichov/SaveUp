@@ -10,6 +10,7 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
     categoria_id: '',
     origem: '',
     valor: '',
+    data: new Date().toISOString().split('T')[0],
   });
   const [categories, setCategories] = useState([]);
 
@@ -50,6 +51,7 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
       if (isNaN(valor) || valor <= 0) errs.valor = 'Introduza um valor maior que 0';
       if (!formData.categoria_id) errs.categoria_id = 'Selecione uma categoria';
       if (!formData.origem || !formData.origem.trim()) errs.origem = 'Indique a origem do rendimento';
+      if (!formData.data) errs.data = 'Selecione uma data';
 
       if (Object.keys(errs).length > 0) {
         setFieldErrors(errs);
