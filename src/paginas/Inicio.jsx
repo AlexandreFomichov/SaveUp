@@ -413,6 +413,7 @@ export default function Home({ userId, token, refreshKey = 0 }) {
     expenseTrend,
     recentExpenses,
     recentIncomes,
+    refreshDashboard,
   } = useDashboardData(userId, token, refreshKey + refreshKeyLocal);
 
   const enrichIncomes = (incomesData) => {
@@ -446,12 +447,14 @@ export default function Home({ userId, token, refreshKey = 0 }) {
   const handleExpenseCreated = useCallback(() => {
     handleRefresh();
     notifyExpenseUpdate();
-  }, [handleRefresh, notifyExpenseUpdate]);
+    refreshDashboard();
+  }, [handleRefresh, notifyExpenseUpdate, refreshDashboard]);
 
   const handleIncomeCreated = useCallback(() => {
     handleRefresh();
     notifyIncomeUpdate();
-  }, [handleRefresh, notifyIncomeUpdate]);
+    refreshDashboard();
+  }, [handleRefresh, notifyIncomeUpdate, refreshDashboard]);
 
   if (loading) {
     return <div className="home-page"><p>Carregando...</p></div>;
