@@ -153,19 +153,6 @@ function ExpenseForm({ userId, token, onExpenseCreated, onNotification }) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="data">Data</label>
-          <input
-            type="date"
-            id="data"
-            name="data"
-            value={formData.data}
-            onChange={handleInputChange}
-            required
-          />
-          {fieldErrors.data && <small className="field-error">{fieldErrors.data}</small>}
-        </div>
-
-        <div className="form-group">
           <label htmlFor="valor">Valor (€)</label>
           <input
             type="number"
@@ -179,6 +166,19 @@ function ExpenseForm({ userId, token, onExpenseCreated, onNotification }) {
             required
           />
           {fieldErrors.valor && <small className="field-error">{fieldErrors.valor}</small>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="data">Data</label>
+          <input
+            type="date"
+            id="data"
+            name="data"
+            value={formData.data}
+            onChange={handleInputChange}
+            required
+          />
+          {fieldErrors.data && <small className="field-error">{fieldErrors.data}</small>}
         </div>
 
         <div className="form-actions">
