@@ -74,6 +74,29 @@ const getLastDaysTotals = (entries, days = 7) => {
 
 const safeArray = (data) => (Array.isArray(data) ? data : []);
 
+const isExpenseEntry = (entry) => {
+  if (!entry || typeof entry !== 'object') return false;
+  if (entry.tipo === 'despesa') return true;
+  if (entry.tipo === 'rendimento') return false;
+  return !entry.origem && entry.descricao !== undefined;
+};
+
+const isIncomeEntry = (entry) => {
+  if (!entry || typeof entry !== 'object') return false;
+  if (entry.tipo === 'rendimento') return true;
+  if (entry.tipo === 'despesa') return false;
+  return Boolean(entry.origem || entry.origem_extra);
+};
+
+const normalizeEntries = (entries, type) => {
+  const items = safeArray(entries);
+  if (type === 'income') {
+    return items.filter(isIncomeEntry);
+  }
+
+  return items.filter(isExpenseEntry);
+};
+
 const getLatestEntries = (entries, limit = 3) => {
   return [...safeArray(entries)]
     .filter((entry) => entry?.data)
@@ -117,10 +140,10 @@ export default function useDashboardData(userId, token, refreshKey = 0) {
         incomesService.getAll(userId, token),
       ]);
 
-      setExpenses(safeArray(expensesData));
-      setIncomes(safeArray(incomesData));
-      setAllExpenses(safeArray(allExpensesData));
-      setAllIncomes(safeArray(allIncomesData));
+      setExpenses(normalizeEntries(expensesData, 'expense'));
+      setIncomes(normalizeEntries(incomesData, 'income'));
+      setAllExpenses(normalizeEntries(allExpensesData, 'expense'));
+      setAllIncomes(normalizeEntries(allIncomesData, 'income'));
 
       const currentBudget = Array.isArray(budgetData) ? budgetData[0] : budgetData;
       setBudget(currentBudget || null);

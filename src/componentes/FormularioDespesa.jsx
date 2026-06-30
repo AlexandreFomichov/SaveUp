@@ -77,6 +77,7 @@ function ExpenseForm({ userId, token, onExpenseCreated, onNotification }) {
         descricao: formData.descricao,
         valor: parseFloat(formData.valor),
         data: formData.data,
+        tipo: 'despesa',
       };
 
       await expensesService.create(userId, expenseData, token);

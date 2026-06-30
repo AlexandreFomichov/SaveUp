@@ -19,7 +19,7 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
       try {
         const data = await incomeCategoriesService.getAll(token);
         if (mounted) setCategories(Array.isArray(data) ? data : []);
-      } catch (e) {
+      } catch {
         // silently ignore, keep categories empty
       }
     };
@@ -63,6 +63,7 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
         categoria_id: parseInt(formData.categoria_id, 10),
         origem: formData.origem.trim(),
         data: new Date().toISOString().split('T')[0],
+        tipo: 'rendimento',
       };
 
       await incomesService.create(userId, incomeData, token);

@@ -392,7 +392,8 @@ const startServer = async () => {
           d.descricao,
           d.valor,
           d.data,
-          d.data_registo
+          d.data_registo,
+          'despesa' AS tipo
         FROM sauveup_despesas d
         LEFT JOIN sauveup_categorias c ON d.categoria_id = c.id
         WHERE d.utilizador_id = ?
@@ -451,7 +452,8 @@ const startServer = async () => {
       const [rows] = await connection.execute(
         `SELECT 
           d.*,
-          c.nome as categoria_nome
+          c.nome as categoria_nome,
+          'despesa' AS tipo
         FROM sauveup_despesas d
         LEFT JOIN sauveup_categorias c ON d.categoria_id = c.id
         WHERE d.id = ?`,
@@ -747,7 +749,8 @@ const startServer = async () => {
           origem,
           valor,
           data,
-          data_registo
+          data_registo,
+          'rendimento' AS tipo
         FROM sauveup_rendimentos_extra
         WHERE utilizador_id = ?
       `;
