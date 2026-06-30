@@ -21,12 +21,12 @@ const CATEGORY_ICONS = {
   'Entretenimento': '◇', // Diamante vazio = diversão/especial
   'Moradia': '⌂',        // Casa = casa
   'Outros': '•',         // Ponto = genérico
-
+  
   // Rendimentos
   'Freelance': '∞',      // Infinito = trabalho contínuo
   'Bónus': '▲',          // Triângulo para cima = crescimento/ganho
   'Vendas de Artigos': '◆', // Diamante preenchido = valor/mercadoria
-  'OutrosRendimento': '•', // Ponto = genérico
+  'Outros': '•',         // Ponto = genérico
 };
 
 const getIconForCategory = (categoryName) => {
