@@ -11,6 +11,7 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
     categoria_id: '',
     origem: '',
     valor: '',
+    data: getTodayDateString(),
   });
   const [categories, setCategories] = useState([]);
 
@@ -51,6 +52,7 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
       if (isNaN(valor) || valor <= 0) errs.valor = 'Introduza um valor maior que 0';
       if (!formData.categoria_id) errs.categoria_id = 'Selecione uma categoria';
       if (!formData.origem || !formData.origem.trim()) errs.origem = 'Indique a origem do rendimento';
+      if (!formData.data) errs.data = 'Data é obrigatória';
 
       if (Object.keys(errs).length > 0) {
         setFieldErrors(errs);
@@ -63,7 +65,7 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
         valor,
         categoria_id: parseInt(formData.categoria_id, 10),
         origem: formData.origem.trim(),
-        data: getTodayDateString(),
+        data: formData.data,
         tipo: 'rendimento',
       };
 
@@ -73,6 +75,7 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
         categoria_id: '',
         origem: '',
         valor: '',
+        data: getTodayDateString(),
       });
       if (onNotification) {
         onNotification('Rendimento registado', 'Rendimento extra guardado com sucesso!', 'success');
@@ -153,7 +156,21 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
           />
           {fieldErrors.valor && <small className="field-error">{fieldErrors.valor}</small>}
         </div>
+group">
+          <label htmlFor="data">Data</label>
+          <input
+            type="date"
+            id="data"
+            name="data"
+            value={formData.data}
+            onChange={handleInputChange}
+            disabled={loading}
+            required
+          />
+          {fieldErrors.data && <small className="field-error">{fieldErrors.data}</small>}
+        </div>
 
+        <div className="form-
         <div className="form-actions">
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? 'Guardando...' : 'Guardar Rendimento'}
