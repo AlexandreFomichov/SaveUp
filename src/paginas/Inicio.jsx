@@ -26,7 +26,6 @@ const CATEGORY_ICONS = {
   'Freelance': '∞',      // Infinito = trabalho contínuo
   'Bónus': '▲',          // Triângulo para cima = crescimento/ganho
   'Vendas de Artigos': '◆', // Diamante preenchido = valor/mercadoria
-  'Outros': '•',         // Ponto = genérico
 };
 
 const getIconForCategory = (categoryName) => {

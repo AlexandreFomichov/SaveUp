@@ -4,7 +4,7 @@ import useDataSync from '../ganchos/useSincronizacaoDados';
 import '../paginas/Paginas.css';
 
 function BudgetPage({ userId, token }) {
-  const { notifyUpdate } = useDataSync('budget', () => {});
+  const { notifyUpdate } = useDataSync('budget-updated', () => {});
 
   const handleBudgetUpdated = useCallback(() => {
     notifyUpdate();

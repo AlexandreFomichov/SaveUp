@@ -29,6 +29,7 @@ function App() {
 
   useDataSync('budget-updated', handleGlobalDataUpdate);
   useDataSync('expenses-updated', handleGlobalDataUpdate);
+  useDataSync('incomes-updated', handleGlobalDataUpdate);
 
   if (!user || !token) {
     return (

@@ -8,7 +8,7 @@ import './Despesas.css';
 
 function ExpensesPage({ userId, token, refreshTrigger, onExpenseCreated }) {
   const [popup, setPopup] = useState({ visible: false, title: '', message: '', type: 'success' });
-  const { notifyUpdate } = useDataSync('expenses', () => {});
+  const { notifyUpdate } = useDataSync('expenses-updated', () => {});
 
   const showPopup = useCallback((title, message, type = 'success') => {
     setPopup({ visible: true, title, message, type });
