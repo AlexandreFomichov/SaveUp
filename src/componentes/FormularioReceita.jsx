@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { incomesService, incomeCategoriesService } from '../servicos/api';
+import { getTodayDateString } from '../utilitarios/datas';
 import './FormularioReceita.css';
 
 export default function IncomeForm({ userId, token, onIncomeCreated, onNotification }) {
@@ -62,7 +63,7 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
         valor,
         categoria_id: parseInt(formData.categoria_id, 10),
         origem: formData.origem.trim(),
-        data: new Date().toISOString().split('T')[0],
+        data: getTodayDateString(),
         tipo: 'rendimento',
       };
 

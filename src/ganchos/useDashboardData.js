@@ -1,22 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { budgetService, expensesService, incomesService } from '../servicos/api';
-
-const getCurrentMonthInfo = (referenceDate = new Date()) => {
-  const month = referenceDate.getMonth() + 1;
-  const year = referenceDate.getFullYear();
-  const monthLabel = referenceDate.toLocaleString('pt-PT', {
-    month: 'long',
-    year: 'numeric',
-  });
-
-  return {
-    month,
-    year,
-    monthLabel: monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1),
-    startDate: `${year}-${String(month).padStart(2, '0')}-01`,
-    endDate: new Date(year, month, 0).toISOString().split('T')[0],
-  };
-};
+import { getCurrentMonthInfo } from '../utilitarios/datas';
 
 const getTopCategory = (expenses, totalSpent) => {
   if (!expenses.length || totalSpent === 0) return null;

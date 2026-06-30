@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { expensesService, categoriesService } from '../servicos/api';
+import { getTodayDateString } from '../utilitarios/datas';
 import './FormularioDespesa.css';
 
 /**
@@ -11,7 +12,7 @@ function ExpenseForm({ userId, token, onExpenseCreated, onNotification }) {
     categoria_id: '',
     descricao: '',
     valor: '',
-    data: new Date().toISOString().split('T')[0],
+    data: getTodayDateString(),
   });
 
   const [categories, setCategories] = useState([]);
@@ -87,7 +88,7 @@ function ExpenseForm({ userId, token, onExpenseCreated, onNotification }) {
         categoria_id: '',
         descricao: '',
         valor: '',
-        data: new Date().toISOString().split('T')[0],
+        data: getTodayDateString(),
       });
 
       if (onNotification) {

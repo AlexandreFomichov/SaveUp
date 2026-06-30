@@ -2,14 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import useDataSync from '../ganchos/useSincronizacaoDados';
 import { budgetService, expensesService, incomesService } from '../servicos/api';
 import { formatCurrency, formatMonthYear } from '../utilitarios/formatadores';
+import { getMonthRange } from '../utilitarios/datas';
 import ProgressBar from './BarraProgresso';
 import './PainelOrcamento.css';
-
-const getMonthRange = (year, month) => {
-  const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
-  const endDate = new Date(year, month, 0).toISOString().split('T')[0];
-  return { startDate, endDate };
-};
 
 function BudgetHeader({ monthYear, error }) {
   return (
