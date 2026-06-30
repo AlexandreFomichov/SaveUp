@@ -156,7 +156,8 @@ export default function IncomeForm({ userId, token, onIncomeCreated, onNotificat
           />
           {fieldErrors.valor && <small className="field-error">{fieldErrors.valor}</small>}
         </div>
-group">
+
+        <div className="form-group">
           <label htmlFor="data">Data</label>
           <input
             type="date"
@@ -170,7 +171,6 @@ group">
           {fieldErrors.data && <small className="field-error">{fieldErrors.data}</small>}
         </div>
 
-        <div className="form-
         <div className="form-actions">
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? 'Guardando...' : 'Guardar Rendimento'}
