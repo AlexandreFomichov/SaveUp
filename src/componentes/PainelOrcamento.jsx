@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { budgetService, expensesService, incomesService } from '../servicos/api';
 import { formatCurrency, formatMonthYear } from '../utilitarios/formatadores';
-import useDataSync from '../ganchos/useSincronizacaoDados';
 import ProgressBar from './BarraProgresso';
 import './PainelOrcamento.css';
 
@@ -126,51 +125,45 @@ function BudgetPanel({ userId, token, onBudgetUpdated }) {
   const currentYear = now.getFullYear();
   const monthYearLabel = formatMonthYear(currentMonth, currentYear);
 
-  const loadBudgetData = useCallback(async () => {
-    if (!userId || !token) {
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const budgetData = await budgetService.getByMonth(userId, currentMonth, currentYear, token);
-      const currentBudget = Array.isArray(budgetData) ? budgetData[0] : budgetData;
-
-      if (currentBudget) {
-        setBudget(currentBudget);
-        setEditValue(String(currentBudget.valor_mensal || 0));
-      } else {
-        setBudget(null);
-        setEditValue('');
-      }
-
-      const { startDate, endDate } = getMonthRange(currentYear, currentMonth);
-      const expensesData = await expensesService.getByDateRange(userId, startDate, endDate, token);
-      setExpenses(Array.isArray(expensesData) ? expensesData : []);
-
-      const incomesData = await incomesService.getByDateRange(userId, startDate, endDate, token);
-      setIncomes(Array.isArray(incomesData) ? incomesData : []);
-    } catch (err) {
-      console.error(err);
+  useEffect(() => {
+    const loadBudgetData = async () => {
+      setLoading(true);
       setError(null);
-      setBudget(null);
-      setExpenses([]);
-      setIncomes([]);
-    } finally {
-      setLoading(false);
+
+      try {
+        const budgetData = await budgetService.getByMonth(userId, currentMonth, currentYear, token);
+        const currentBudget = Array.isArray(budgetData) ? budgetData[0] : budgetData;
+
+        if (currentBudget) {
+          setBudget(currentBudget);
+          setEditValue(String(currentBudget.valor_mensal || 0));
+        } else {
+          setBudget(null);
+          setEditValue('');
+        }
+
+        const { startDate, endDate } = getMonthRange(currentYear, currentMonth);
+        const expensesData = await expensesService.getByDateRange(userId, startDate, endDate, token);
+        setExpenses(Array.isArray(expensesData) ? expensesData : []);
+
+        // Buscar rendimentos extras do mês atual
+        const incomesData = await incomesService.getByDateRange(userId, startDate, endDate, token);
+        setIncomes(Array.isArray(incomesData) ? incomesData : []);
+      } catch (err) {
+        console.error(err);
+        setError(null);
+        setBudget(null);
+        setExpenses([]);
+        setIncomes([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userId && token) {
+      loadBudgetData();
     }
   }, [userId, token, currentMonth, currentYear]);
-
-  useEffect(() => {
-    loadBudgetData();
-  }, [loadBudgetData]);
-
-  useDataSync('budget-updated', loadBudgetData);
-  useDataSync('expenses-updated', loadBudgetData);
-  useDataSync('incomes-updated', loadBudgetData);
 
   const totalExpenses = expenses.reduce((sum, expense) => sum + Number(expense.valor || 0), 0);
   const totalExtraIncome = incomes.reduce((sum, income) => sum + Number(income.valor || 0), 0);
